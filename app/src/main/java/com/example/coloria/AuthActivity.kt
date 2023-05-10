@@ -1,5 +1,6 @@
 package com.example.coloria
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +18,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 class AuthActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAuthBinding
-    private val _googleSingIn = 100
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +37,6 @@ class AuthActivity : AppCompatActivity() {
         binding.buttonSignUp.setOnClickListener {
             // Crear un Intent para la actividad ActivitySignIn
             val intent = Intent(this, ActivitySignUp::class.java)
-
             // Iniciar la actividad ActivitySignIn
             startActivity(intent)
         }
@@ -45,48 +45,13 @@ class AuthActivity : AppCompatActivity() {
 
     }
 
+
+
     private fun setup(){
         val editTextEmail = binding.editTextEmail
         val editTextPassword = binding.editTextPassword
         val buttonRemember = binding.checkBoxRemember
 
-        val signInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == _googleSingIn) {
-                // El inicio de sesión fue exitoso, puedes obtener el token de acceso aquí
-                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-
-                try {
-                    val token = task.getResult(ApiException::class.java)
-                    // hacer algo con el token aquí
-                    if (token != null) {
-                        val credential = GoogleAuthProvider.getCredential(token.idToken, null)
-                        FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener {
-                            if (it.isSuccessful) {
-                                if (buttonRemember.isChecked) {
-                                    val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit()
-                                    prefs.putString("email", editTextEmail.text.toString())
-                                    prefs.putString("password", editTextPassword.text.toString())
-                                    prefs.apply()
-                                }
-                                val intent = Intent(this, MainActivity::class.java)
-                                val text = "Bienvenido!"
-                                showToast(text)
-                                // Iniciar la actividad ActivitySignIn
-                                startActivity(intent)
-                            } else {
-                                val text = "Se ha producido un error al obtener el usuario!"
-                                showToast(text)
-                            }
-                        }
-                    }
-
-                }catch (e: ApiException){
-                    val text = "Se ha producido un error al obtener el usuario!"
-                    showToast(text)
-
-                }
-            }
-        }
 
 
         binding.buttonLogGoogle.setOnClickListener {
@@ -98,7 +63,6 @@ class AuthActivity : AppCompatActivity() {
 
             googleClient.signOut()
             signInLauncher.launch(googleClient.signInIntent)
-
 
         }
 
@@ -146,10 +110,13 @@ class AuthActivity : AppCompatActivity() {
 
     private fun session(){
         val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
+        val gprefs = getSharedPreferences(getString(R.string.gprefs_file), Context.MODE_PRIVATE)
+
+        val token = gprefs.getString("google_id_token", null)
         val email = prefs.getString("email", null)
         val password = prefs.getString("password", null)
 
-        if (email != null && password != null) {
+        if (email != null && password != null || token != null) {
             val intent = Intent(this, MainActivity::class.java)
             val text = "Bienvenido!"
             showToast(text)
@@ -158,7 +125,45 @@ class AuthActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+    }
+    private  val signInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // El inicio de sesión fue exitoso, puedes obtener el token de acceso aquí
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
 
+            try {
+                val token = task.getResult(ApiException::class.java)
+                // hacer algo con el token aquí
+                if (token != null) {
+                    val credential = GoogleAuthProvider.getCredential(token.idToken, null)
+                    FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener {
+                        if (it.isSuccessful) {
+
+                            val prefs = getSharedPreferences(getString(R.string.gprefs_file), Context.MODE_PRIVATE).edit()
+                            prefs.putString("google_id_token", token.idToken)
+                            prefs.apply()
+
+                            val intent = Intent(this, MainActivity::class.java)
+                            val text = "Bienvenido!"
+                            showToast(text)
+                            // Iniciar la actividad ActivitySignIn
+                            startActivity(intent)
+                        } else {
+                            val text = "Se ha producido un error al obtener el usuario!"
+                            showToast(text)
+                        }
+                    }
+                }
+
+            }catch (e: ApiException){
+                val text = "Se ha producido un error al obtener el usuario!"
+                showToast(text)
+
+            }
+        } else{
+            val text = "Algo ha fallado!"
+            showToast(text)
+        }
     }
 
     }
