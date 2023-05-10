@@ -5,16 +5,19 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBar
 import com.example.coloria.databinding.ActivityAuthBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 
 class AuthActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAuthBinding
-    private val Google_Sign_In = 100
+    private val _googleSingIn = 100
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +50,44 @@ class AuthActivity : AppCompatActivity() {
         val editTextPassword = binding.editTextPassword
         val buttonRemember = binding.checkBoxRemember
 
+        val signInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == _googleSingIn) {
+                // El inicio de sesión fue exitoso, puedes obtener el token de acceso aquí
+                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+
+                try {
+                    val token = task.getResult(ApiException::class.java)
+                    // hacer algo con el token aquí
+                    if (token != null) {
+                        val credential = GoogleAuthProvider.getCredential(token.idToken, null)
+                        FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                if (buttonRemember.isChecked) {
+                                    val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit()
+                                    prefs.putString("email", editTextEmail.text.toString())
+                                    prefs.putString("password", editTextPassword.text.toString())
+                                    prefs.apply()
+                                }
+                                val intent = Intent(this, MainActivity::class.java)
+                                val text = "Bienvenido!"
+                                showToast(text)
+                                // Iniciar la actividad ActivitySignIn
+                                startActivity(intent)
+                            } else {
+                                val text = "Se ha producido un error al obtener el usuario!"
+                                showToast(text)
+                            }
+                        }
+                    }
+
+                }catch (e: ApiException){
+                    val text = "Se ha producido un error al obtener el usuario!"
+                    showToast(text)
+
+                }
+            }
+        }
+
 
         binding.buttonLogGoogle.setOnClickListener {
             val googleConf = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -55,15 +96,16 @@ class AuthActivity : AppCompatActivity() {
                 .build()
             val googleClient = GoogleSignIn.getClient(this, googleConf)
 
+            googleClient.signOut()
+            signInLauncher.launch(googleClient.signInIntent)
 
-            startActivityForResult(googleClient.signInIntent, Google_Sign_In)
 
         }
 
         binding.buttonSingIn.setOnClickListener {
 
             if (editTextEmail.text.isNotEmpty() && editTextPassword.text.isNotEmpty()) {
-                FirebaseAuth.getInstance().signInWithEmailAndPassword(editTextEmail.text.toString(), editTextPassword.text.toString()).addOnCompleteListener() {
+                FirebaseAuth.getInstance().signInWithEmailAndPassword(editTextEmail.text.toString(), editTextPassword.text.toString()).addOnCompleteListener {
                     if(it.isSuccessful){
 
                         if(buttonRemember.isChecked){
