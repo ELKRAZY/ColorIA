@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".AuthActivity"
+    android:layout_alignParentBottom="true"
+    >
+
+    <ImageView
+        android:id="@+id/imageView_Logo"
+        android:layout_width="75dp"
+        android:layout_height="78dp"
+        android:layout_marginLeft="100px"
+        android:layout_marginTop="25px"
+        app:srcCompat="@drawable/logo" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="151dp"
+        android:layout_height="32dp"
+        android:layout_marginBottom="75px"
+        android:layout_marginLeft="10px"
+        app:srcCompat="@drawable/logo2" />
+
+    <EditText
+        android:id="@+id/editTextEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="45px"
+        android:layout_marginRight="45px"
+        android:layout_marginBottom="100px"
+
+        android:drawableEnd="@drawable/ic_baseline_email_24"
+        android:ems="10"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:minHeight="48dp" />
+
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="45px"
+        android:layout_marginRight="45px"
+        android:layout_marginBottom="200px"
+        android:drawableEnd="@drawable/ic_baseline_password_24"
+        android:ems="10"
+        android:hint="Contraseña"
+        android:inputType="textPassword"
+        android:minHeight="48dp" />
+
+    <CheckBox
+        android:id="@+id/checkBoxRemember"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Recordar"
+        android:layout_marginLeft="50px"
+        />
+
+    <Button
+        android:id="@+id/button_LogGoogle"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="45px"
+        android:layout_marginRight="45px"
+        android:layout_marginBottom="30dp"
+        android:gravity="center"
+        android:text="Login con Google"
+        android:textAllCaps="false"
+        app:cornerRadius="10dp"
+        app:icon="@drawable/logogoogle"
+        app:iconGravity="start"
+        app:iconPadding="-20dp"
+        app:iconSize="25dip"
+        app:iconTint="@null" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_SingIn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="45px"
+        android:layout_marginRight="45px"
+        android:layout_marginBottom="30dp"
+        android:radius="20dp"
+        android:background="@drawable/buttongradientcolor"
+        android:text="INICIAR" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/buttonSignUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="45px"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="45px"
+            android:layout_weight="50"
+            android:background="@android:color/transparent"
+            android:minHeight="48dp"
+            android:text="Registrarse"
+            android:textSize="10sp"
+            app:cornerRadius="50dp"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <Button
+            android:id="@+id/buttonPassRecovery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="45px"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="45px"
+            android:layout_weight="50"
+            android:background="@android:color/transparent"
+            android:minHeight="48dp"
+            android:text="Recuperar contraseña"
+            android:textSize="10sp"
+            android:visibility="visible"
+            app:cornerRadius="50dp"
+            tools:ignore="TouchTargetSizeCheck" />
+    </LinearLayout>
+
+</LinearLayout>

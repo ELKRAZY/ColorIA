@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ColorIA</string>
+
+    <string name="prefs_file">colorIA.PREFERENCE_FILE_KEY</string>
+</resources>

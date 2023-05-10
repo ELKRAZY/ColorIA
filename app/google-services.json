@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "124381636592",
+    "project_id": "coloria-dba34",
+    "storage_bucket": "coloria-dba34.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:124381636592:android:094ab6993251a804f81f35",
+        "android_client_info": {
+          "package_name": "com.example.coloria"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "124381636592-g2onbuj1vcicdaq07hcmjc0ess4hsqjg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1LNa1lf8zmhiO4jtuNUzz9gQUySJW3pc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "124381636592-g2onbuj1vcicdaq07hcmjc0ess4hsqjg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
