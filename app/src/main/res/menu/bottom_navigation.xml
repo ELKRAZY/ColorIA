@@ -7,18 +7,23 @@
     <item
         android:id="@+id/imagina"
         android:icon="@drawable/ic_baseline_gradient_24"
+        android:iconTint="@color/Grey"
         android:title="Imagina" />
     <item
         android:id="@+id/favoritos"
-        android:icon="@drawable/ic_baseline_camera_24"
+        android:icon="@drawable/ic_baseline_favorite_border_24"
         android:title="Favoritos" />
     <item
         android:id="@+id/historial"
-        android:icon="@drawable/ic_baseline_camera_24"
-        android:title="Historial" />
+        android:icon="@drawable/ic_baseline_history_edu_24"
+        android:title="Historial"
+        android:fillColor="#3DDC84"
+
+        />
     <item
         android:id="@+id/perfil"
-        android:icon="@drawable/ic_baseline_camera_24"
+        android:icon="@drawable/ic_baseline_person_outline_24"
+        android:iconTint="@color/NewBlue"
         android:title="Perfil" />
 
 </menu>

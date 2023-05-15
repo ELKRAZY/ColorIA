@@ -31,7 +31,7 @@
                 android:layout_gravity="center"
                 android:layout_marginEnd="10dp"
                 android:text="Perfil"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:textColor="@color/text_color"
                 android:fontFamily="@font/roboto_medium"/>
 
@@ -92,7 +92,6 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
             android:background="?android:attr/listDivider"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -138,6 +137,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:labelVisibilityMode="labeled"
+            app:itemTextColor="@color/text_color"
             app:menu="@menu/bottom_navigation" />
     </LinearLayout>
 
