@@ -5,13 +5,14 @@
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/backgroundColor"
     tools:context=".MainActivity">
 
     <LinearLayout
         android:id="@+id/linearLayout10"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="123dp"
+        android:layout_marginBottom="180dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout7"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,19 +22,19 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="66dp"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/textViewPerfil"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
                 android:layout_gravity="center"
                 android:layout_marginEnd="10dp"
+                android:layout_weight="0"
+                android:fontFamily="@font/roboto_medium"
                 android:text="Perfil"
-                android:textSize="20sp"
                 android:textColor="@color/text_color"
-                android:fontFamily="@font/roboto_medium"/>
+                android:textSize="20sp" />
 
             <ImageView
                 android:id="@+id/imageView_Logo"
@@ -45,6 +46,65 @@
                 app:srcCompat="@drawable/logo" />
 
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                app:cardCornerRadius="250dp"
+                android:layout_weight="2"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="10dp"
+                app:cardBackgroundColor="@color/white"
+                android:layout_gravity="center">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="250dp"
+                    android:layout_gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/vincent"
+                        android:scaleType="centerCrop"/>
+
+                </androidx.cardview.widget.CardView>
+
+            </androidx.cardview.widget.CardView>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViewName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    android:text="NAME"
+                    android:textColor="@color/text_color" />
+
+                <TextView
+                    android:id="@+id/textViewEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="top|start"
+                    android:text="EMAIL" />
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -53,17 +113,20 @@
     <LinearLayout
         android:id="@+id/linearLayout6"
         android:layout_width="0dp"
-        android:layout_height="124dp"
+        android:layout_height="181dp"
+        android:layout_marginTop="176dp"
+        android:layout_marginBottom="176dp"
         android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout10" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/linearLayout7"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="2dp"
+        android:layout_marginBottom="1dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
         app:layout_constraintEnd_toEndOf="parent"
@@ -117,27 +180,33 @@
             android:drawableEnd="@drawable/ic_baseline_exit_to_app_24"
             android:fontFamily="@font/roboto_medium"
             android:gravity="start|center_vertical"
-            android:text="Cerrar Sesión"/>
+            android:text="Cerrar Sesión" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout5"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="13dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout7">
 
+        <View
+            android:id="@+id/divider3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
             style="@style/BottomNav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:labelVisibilityMode="labeled"
             app:itemTextColor="@color/text_color"
+            app:labelVisibilityMode="labeled"
             app:menu="@menu/bottom_navigation" />
     </LinearLayout>
 

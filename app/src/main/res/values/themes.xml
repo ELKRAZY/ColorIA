@@ -6,6 +6,8 @@
         <item name="colorPrimaryVariant">@color/green</item>
         <item name="android:textColorPrimary">@color/black</item>
         <item name="colorOnPrimary">@color/black</item>
+        <item name="backgroundColor">@color/white</item>
+
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
 
@@ -18,7 +20,7 @@
 
     <style name="BottomNav">
         <item name="android:background">@color/white</item>
-        <item name="itemIconTint">@color/LGrey</item>
+        <item name="itemIconTint">@color/Grey</item>
         <item name="itemTextColor">@color/Grey</item>
         <item name="android:textColor">@color/Grey</item>
 
