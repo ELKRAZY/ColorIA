@@ -14,4 +14,11 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="BottomNav">
+        <item name="android:background">@color/Navy</item>
+        <item name="itemIconTint">@color/LGrey</item>
+        <item name="itemTextColor">@color/Grey</item>
+
+    </style>
 </resources>
