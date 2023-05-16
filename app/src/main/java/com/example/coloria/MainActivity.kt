@@ -1,7 +1,6 @@
 package com.example.coloria
 
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.coloria.databinding.ActivityMainBinding
@@ -21,12 +20,13 @@ class MainActivity : AppCompatActivity() {
 
 
 
-
+        //Buttons
         logoutButton()
 
 
     }
 
+    //Button method that cleans the shared preferences file and takes you back to the login (signOut)
     private fun logoutButton() {
         binding.buttonLogOut.setOnClickListener {
             val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit()
@@ -38,5 +38,7 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+
 
 }
