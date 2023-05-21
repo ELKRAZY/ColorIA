@@ -48,7 +48,6 @@ class ActivitySignUp : AppCompatActivity() {
 
     private fun setup(){
         val editTextEmail = binding.editTextEmail
-        val email = editTextEmail.text.toString()
         val editTextPassword = binding.editTextPassword
         val editTextPassConf = binding.editTextTextPasswordConfirm
         val editTextUserName = binding.editTextTextUserName
@@ -75,13 +74,30 @@ class ActivitySignUp : AppCompatActivity() {
                     if (editTextEmail.text.isNotEmpty() && editTextPassword.text.isNotEmpty()) {
                         FirebaseAuth.getInstance().createUserWithEmailAndPassword(editTextEmail.text.toString(), editTextPassword.text.toString()).addOnCompleteListener {
                         if(it.isSuccessful){
-                            db.collection("users").document(email).set(
-                                hashMapOf("userName" to editTextUserName.text.toString())
-                            )
-                            val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit()
-                            prefs.putString("UserName", editTextUserName.text.toString())
-                            prefs.apply()
+                            val user = hashMapOf("userName" to editTextUserName.text.toString(), "email" to editTextEmail.text.toString())
 
+                            db.collection("users").document(editTextEmail.text.toString())
+                                .set(user)
+                                .addOnCompleteListener { dbTask ->
+                                    if (dbTask.isSuccessful) {
+                                        val prefs = getSharedPreferences(
+                                            getString(R.string.prefs_file),
+                                            Context.MODE_PRIVATE
+                                        ).edit()
+                                        prefs.putString("UserName", editTextUserName.text.toString())
+                                        prefs.apply()
+
+                                        val intent = Intent(this, AuthActivity::class.java)
+                                        val text = "Bienvenido!"
+                                        showToast(text)
+
+                                        // Iniciar la actividad ActivitySignIn
+                                        startActivity(intent)
+                                    } else {
+                                        val text = "Error al guardar el usuario en la base de datos!"
+                                        showToast(text)
+                                    }
+                                }
                             val intent = Intent(this, AuthActivity::class.java)
                             val text = "Bienvenido!"
                             showToast(text)
