@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -68,10 +69,7 @@ class ActivitySignUp : AppCompatActivity() {
 
         binding.buttonSingUp.setOnClickListener {
 
-            if(editTextUserName.text.isNotEmpty()){
-
-                if(editTextPassword.text.toString() == editTextPassConf.text.toString()){
-                    if (editTextEmail.text.isNotEmpty() && editTextPassword.text.isNotEmpty()) {
+                    if (validateEmail(editTextEmail) && validatePassword(editTextPassword, editTextPassConf) && validateUserName(editTextUserName)) {
                         FirebaseAuth.getInstance().createUserWithEmailAndPassword(editTextEmail.text.toString(), editTextPassword.text.toString()).addOnCompleteListener {
                         if(it.isSuccessful){
                             val user = hashMapOf("userName" to editTextUserName.text.toString(), "email" to editTextEmail.text.toString())
@@ -109,27 +107,14 @@ class ActivitySignUp : AppCompatActivity() {
                     }
 
                     }else{
-                    val text = "Introduzca email y/o contraseña"
+                    val text = "Ha sucedido un error"
                     showToast(text)
 
             }
-            }
-                else{
-                    editTextPassConf.error = "Las contraseñas no coinciden"
-                }
 
-
-            }else{
-                editTextUserName.error = "No hay nombre de usuario"
-            }
         }
     }
 
-    private fun showToast(text: String){
-        val duration = Toast.LENGTH_SHORT
-        val toast = Toast.makeText(applicationContext, text, duration)
-        toast.show()
-    }
 
     private  val signInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -171,5 +156,57 @@ class ActivitySignUp : AppCompatActivity() {
         }
     }
 
+
+    private fun validateUserName(editTextUserName: EditText): Boolean {
+        val userName = editTextUserName.text.toString().trim()
+        return if (userName.isNotEmpty()) {
+            true
+        } else {
+            val text = "No hay nombre de usuario!"
+            showToast(text)
+            editTextUserName.error = "No hay nombre de usuario"
+            false
+        }
+    }
+
+    private fun validatePassword(editTextPassword: EditText, editTextPassConf: EditText): Boolean {
+        val password = editTextPassword.text.toString().trim()
+        val confirmPassword = editTextPassConf.text.toString().trim()
+        return if (password.isNotEmpty()) {
+            if (password == confirmPassword) {
+                true
+            } else {
+                val text = "Las contraseñas no coinciden!"
+                showToast(text)
+                editTextPassConf.error = "Las contraseñas no coinciden"
+                false
+            }
+        } else {
+            val text = "Introduzca una contraseña!"
+            showToast(text)
+            editTextPassword.error = "Introduzca una contraseña"
+            false
+        }
+    }
+
+    private fun validateEmail(editTextEmail: EditText): Boolean {
+        val email = editTextEmail.text.toString().trim()
+        return if (email.isNotEmpty()) {
+            true
+        } else {
+
+            val text = "No hay email o no es válido!"
+            showToast(text)
+            editTextEmail.error = "Introduzca un email"
+            false
+        }
+    }
+
+
+    private fun showToast(text: String){
+        val duration = Toast.LENGTH_SHORT
+        val toast = Toast.makeText(applicationContext, text, duration)
+        toast.show()
+    }
 
 }

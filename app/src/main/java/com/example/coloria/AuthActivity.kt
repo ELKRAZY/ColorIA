@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBar
@@ -68,7 +69,7 @@ class AuthActivity : AppCompatActivity() {
 
         binding.buttonSingIn.setOnClickListener {
 
-            if (editTextEmail.text.isNotEmpty() && editTextPassword.text.isNotEmpty()) {
+            if (validateEmail(editTextEmail) && validatePassword(editTextPassword)) {
                 FirebaseAuth.getInstance().signInWithEmailAndPassword(editTextEmail.text.toString(), editTextPassword.text.toString()).addOnCompleteListener {
                     if(it.isSuccessful){
 
@@ -88,7 +89,7 @@ class AuthActivity : AppCompatActivity() {
 
 
 
-             }  else{
+             }else{
                         val text = " La contraseña y/o el email no son correctos"
                         showToast(text)
 
@@ -96,7 +97,7 @@ class AuthActivity : AppCompatActivity() {
 
                       }
                     } else{
-                val text = "Introduzca email y/o contraseña"
+                val text = "No se ha podido iniciar sesión X_x"
                 showToast(text)
 
             }
@@ -163,6 +164,30 @@ class AuthActivity : AppCompatActivity() {
         } else{
             val text = "Algo ha fallado!"
             showToast(text)
+        }
+    }
+
+    private fun validateEmail(editTextEmail: EditText): Boolean {
+        val email = editTextEmail.text.toString().trim()
+        return if (email.isNotEmpty()) {
+            true
+        } else {
+            val text = "¡Introduzca un email!"
+            showToast(text)
+            editTextEmail.error = "Introduzca un email"
+            false
+        }
+    }
+
+    private fun validatePassword(editTextPassword: EditText): Boolean {
+        val password = editTextPassword.text.toString().trim()
+        return if (password.isNotEmpty()) {
+            true
+        } else {
+            val text = "¡Introduzca una contraseña!"
+            showToast(text)
+            editTextPassword.error = "Introduzca una contraseña"
+            false
         }
     }
 
