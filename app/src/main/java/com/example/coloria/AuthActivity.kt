@@ -15,12 +15,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class AuthActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAuthBinding
-
-
+    private val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -139,14 +140,32 @@ class AuthActivity : AppCompatActivity() {
                     val credential = GoogleAuthProvider.getCredential(token.idToken, null)
                     FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener {
                         if (it.isSuccessful) {
+                            val users = FirebaseAuth.getInstance().currentUser
+                            if (users != null) {
+                                val email = users.email
+                                val username = email?.substringBefore("@")
+                                val user = hashMapOf("userName" to username, "email" to email)
 
-                            val prefs = getSharedPreferences(getString(R.string.gprefs_file), Context.MODE_PRIVATE).edit()
-                            prefs.putString("google_id_token", token.idToken)
-                            prefs.apply()
+                                db.collection("users").document(email.toString())
+                                    .set(user)
+                                    .addOnCompleteListener { dbTask ->
+                                        if (dbTask.isSuccessful) {
+                                            val prefs = getSharedPreferences(getString(R.string.gprefs_file), Context.MODE_PRIVATE).edit()
+                                            prefs.putString("google_id_token", token.idToken)
+                                            prefs.apply()
 
-                            val intent = Intent(this, MainActivity::class.java)
-                            val text = "Bienvenido!"
-                            showToast(text)
+                                            val intent = Intent(this, AuthActivity::class.java)
+                                            val text = "Bienvenido!"
+                                            showToast(text)
+
+                                            // Iniciar la actividad ActivitySignIn
+                                            startActivity(intent)
+                                        } else {
+                                            val text = "Error al guardar el usuario en la base de datos!"
+                                            showToast(text)
+                                        }
+                                    }
+                            }
                             // Iniciar la actividad ActivitySignIn
                             startActivity(intent)
                         } else {
