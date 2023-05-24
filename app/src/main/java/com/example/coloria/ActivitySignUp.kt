@@ -190,6 +190,7 @@ class ActivitySignUp : AppCompatActivity() {
         val password = editTextPassword.text.toString().trim()
         val confirmPassword = editTextPassConf.text.toString().trim()
         return if (password.isNotEmpty()) {
+            if (password.length > 6) {
             if (password == confirmPassword) {
                 true
             } else {
@@ -199,6 +200,13 @@ class ActivitySignUp : AppCompatActivity() {
                 false
             }
         } else {
+            val text = "La contraseña tiene que tener minimo 6 caracteres minimo!"
+            showToast(text)
+            editTextPassword.error = "Introduzca una contraseña válida"
+            false
+        }
+        }else
+        {
             val text = "Introduzca una contraseña!"
             showToast(text)
             editTextPassword.error = "Introduzca una contraseña"

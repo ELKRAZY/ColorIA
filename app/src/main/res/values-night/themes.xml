@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.ColorIA" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
@@ -7,6 +7,8 @@
         <item name="colorPrimaryVariant">@color/NewBlue</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="backgroundColor">#1D1E1E</item>
+        <item name="materialAlertDialogTheme">@style/AlertDialogTheme</item>
+
 
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
