@@ -18,7 +18,6 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.ktx.firestore
-//import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 
 class ActivitySignUp : AppCompatActivity() {
@@ -72,7 +71,7 @@ class ActivitySignUp : AppCompatActivity() {
                     if (validateEmail(editTextEmail) && validatePassword(editTextPassword, editTextPassConf) && validateUserName(editTextUserName)) {
                         FirebaseAuth.getInstance().createUserWithEmailAndPassword(editTextEmail.text.toString(), editTextPassword.text.toString()).addOnCompleteListener {
                         if(it.isSuccessful){
-                            val user = hashMapOf("userName" to editTextUserName.text.toString(), "email" to editTextEmail.text.toString())
+                            val user = hashMapOf("userName" to editTextUserName.text.toString(), "email" to editTextEmail.text.toString(), "pfp" to "")
 
                             db.collection("users").document(editTextEmail.text.toString())
                                 .set(user)
@@ -130,7 +129,7 @@ class ActivitySignUp : AppCompatActivity() {
                             if (users != null) {
                                 val email = users.email
                                 val username = email?.substringBefore("@")
-                                val user = hashMapOf("userName" to username, "email" to email)
+                                val user = hashMapOf("userName" to username, "email" to email, "pfp" to "")
 
                                 db.collection("users").document(email.toString())
                                     .set(user)
