@@ -26,4 +26,14 @@
         <item name="android:textColor">@color/Grey</item>
 
     </style>
+
+    <style name="ThemeOverlay.ColorIA.FullscreenContainer" parent="">
+        <item name="fullscreenBackgroundColor">@color/light_blue_600</item>
+        <item name="fullscreenTextColor">@color/light_blue_A200</item>
+    </style>
+  <!-- Base application theme. -->
+    <style name="Base.Theme.ColorIA" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
 </resources>
