@@ -1,6 +1,7 @@
 package com.example.coloria
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
@@ -43,8 +44,22 @@ class MainActivity : AppCompatActivity() {
         //Buttons
         logoutButton()
 
+        binding.bottomNavigation.setOnItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.foto -> {
+                    // Abre la clase CameraActivity
+                    val intent = Intent(this, CameraActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                // Agrega más casos según las opciones del BottomNavigationView
+                // ...
 
+                else -> false
+            }
     }
+    }
+
 
 
 
