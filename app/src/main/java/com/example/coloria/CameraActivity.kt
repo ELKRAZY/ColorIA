@@ -7,26 +7,22 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -43,8 +39,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.common.util.concurrent.ListenableFuture
 import java.io.File
 import java.io.FileNotFoundException
-import java.io.IOException
-import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -71,13 +65,13 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var galleryBtn: Button
     private lateinit var takePhotoBtn: Button
     private lateinit var switchCameraBtn: Button
-    lateinit var colorName: TextView
-    lateinit var fabSavedfPhotos: FloatingActionButton
-    lateinit var pointer: View
-    lateinit var cardColor: CardView
-    lateinit var card_color_preview: CardView
-    lateinit var card_colorName: TextView
-    lateinit var colorHex: TextView
+    private lateinit var colorName: TextView
+    private lateinit var fabSavedfPhotos: FloatingActionButton
+    private lateinit var pointer: View
+    private lateinit var cardColor: CardView
+    private lateinit var card_color_preview: CardView
+    private lateinit var card_colorName: TextView
+    private lateinit var colorHex: TextView
 
     // ViewModel
     private lateinit var detectViewModel: ColorDetectViewModel
@@ -101,7 +95,6 @@ class CameraActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         super.onCreate(savedInstanceState)
         binding = ActivityCameraBinding.inflate(layoutInflater)
@@ -129,8 +122,11 @@ class CameraActivity : AppCompatActivity() {
             card_color_preview.y = motionEvent.y
             card_color_preview.x = motionEvent.x
 
-            var pointerX = card_color_preview.x + card_color_preview.x / 2
-            var pointerY = card_color_preview.y + 100
+            var pointerX = card_color_preview.x
+            var pointerY = card_color_preview.y
+
+            card_color_preview.x = motionEvent.x - motionEvent.x / 2
+            card_color_preview.y = motionEvent.y - 100
 
             val margin = TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
@@ -252,7 +248,6 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun animateFlash() {
         binding.root.postDelayed({
             binding.root.foreground = ColorDrawable(Color.WHITE)
@@ -267,7 +262,7 @@ class CameraActivity : AppCompatActivity() {
             val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
             requestPermissions(permissions, PERMISSION_CODE)
         } else {
-            chooseImageGallery();
+            chooseImageGallery()
         }
     }
 

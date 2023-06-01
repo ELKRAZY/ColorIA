@@ -44,6 +44,9 @@ class MainActivity : AppCompatActivity() {
         //Buttons
         logoutButton()
 
+        binding.bottomNavigation.selectedItemId = R.id.perfil
+
+
         binding.bottomNavigation.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.foto -> {
@@ -52,9 +55,26 @@ class MainActivity : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
-                // Agrega más casos según las opciones del BottomNavigationView
-                // ...
-
+                R.id.imagina -> {
+                    // Abre la actividad correspondiente para "Imagina"
+                    // ...
+                    true
+                }
+                R.id.favoritos -> {
+                    // Abre la actividad correspondiente para "Favoritos"
+                    // ...
+                    true
+                }
+                R.id.historial -> {
+                    // Abre la actividad correspondiente para "Historial"
+                    // ...
+                    true
+                }
+                R.id.perfil -> {
+                    // Abre la actividad correspondiente para "Perfil"
+                    // ...
+                    true
+                }
                 else -> false
             }
     }
