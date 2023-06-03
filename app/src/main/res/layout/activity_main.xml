@@ -33,7 +33,7 @@
                 android:layout_marginEnd="10dp"
                 android:layout_weight="0"
                 android:fontFamily="@font/roboto_bold"
-                android:text="Perfil"
+                android:text="@string/perfil"
                 android:textColor="@color/text_color"
                 android:textSize="20sp" />
 
@@ -44,7 +44,8 @@
 
                 android:layout_gravity="center"
                 android:layout_weight="0"
-                app:srcCompat="@drawable/logo" />
+                app:srcCompat="@drawable/logo"
+                android:importantForAccessibility="no" />
 
 
         </LinearLayout>
@@ -78,7 +79,7 @@
                         android:scaleType="centerCrop"
                         android:src="@drawable/vincent"
 
-                        />
+                        android:importantForAccessibility="no" />
 
 
                 </androidx.cardview.widget.CardView>
@@ -100,8 +101,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="bottom"
-                    android:text="NAME"
-                    android:textColor="@color/text_color" />
+                    android:text="@string/name"
+                    android:textColor="@color/text_color"
+                    tools:ignore="NestedWeights" />
 
                 <TextView
                     android:id="@+id/textViewEmail"
@@ -109,7 +111,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="top|start"
-                    android:text="EMAIL" />
+                    android:text="@string/email" />
             </LinearLayout>
 
         </LinearLayout>
@@ -140,7 +142,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="30dp"
             android:fontFamily="@font/roboto_medium"
-            android:text="AJUSTES" />
+            android:text="@string/ajustes" />
 
         <Button
             android:id="@+id/buttonInformacion"
@@ -149,7 +151,7 @@
             android:drawableEnd="@drawable/user_person"
             android:fontFamily="@font/roboto_medium"
             android:gravity="center|start"
-            android:text="INFORMACION" />
+            android:text="@string/informacion" />
 
         <Button
             android:id="@+id/button2"
@@ -158,7 +160,7 @@
             android:drawableEnd="@drawable/key_pass"
             android:fontFamily="@font/roboto_medium"
             android:gravity="center|start"
-            android:text="CONTRASEÑA" />
+            android:text="@string/contrase_a" />
     </LinearLayout>
 
     <LinearLayout
@@ -177,7 +179,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:fontFamily="@font/roboto_medium"
-            android:text="MÁS INFORMACIÓN" />
+            android:text="@string/m_s_informaci_n" />
 
         <Button
             android:id="@+id/buttonVersion"
@@ -186,7 +188,7 @@
             android:drawableEnd="@drawable/ic_outline_info_24"
             android:fontFamily="@font/roboto_medium"
             android:gravity="center|start"
-            android:text="Versión de la app" />
+            android:text="@string/versi_n_de_la_app" />
 
         <View
             android:id="@+id/divider2"
@@ -203,7 +205,7 @@
             android:drawableEnd="@drawable/ic_baseline_help_outline_24"
             android:fontFamily="@font/roboto_medium"
             android:gravity="center|start"
-            android:text="Preguntas frecuentes" />
+            android:text="@string/preguntas_frecuentes" />
 
         <View
             android:id="@+id/divider"
@@ -218,7 +220,7 @@
             android:drawableEnd="@drawable/ic_baseline_exit_to_app_24"
             android:fontFamily="@font/roboto_medium"
             android:gravity="start|center_vertical"
-            android:text="Cerrar Sesión" />
+            android:text="@string/cerrar_sesi_n" />
     </LinearLayout>
 
     <LinearLayout
@@ -229,7 +231,7 @@
         app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout7"></LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout7" />
 
     <LinearLayout
         android:id="@+id/linearLayout5"

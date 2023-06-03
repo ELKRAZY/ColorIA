@@ -53,5 +53,23 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="no_photo_text">No hay foto aquí</string>
+    <string name="login">Iniciar Sesión</string>
+    <string name="email">Email</string>
+    <string name="nombre_de_usuario">Nombre de Usuario</string>
+    <string name="contrase_a">Contraseña</string>
+    <string name="confirmar_contrase_a">Confirmar Contraseña</string>
+    <string name="login_con_google">Login con Google</string>
+    <string name="registrar">Registrar</string>
+    <string name="perfil">Perfil</string>
+    <string name="name">NAME</string>
+    <string name="ajustes">AJUSTES</string>
+    <string name="informacion">INFORMACION</string>
+    <string name="m_s_informaci_n">MÁS INFORMACIÓN</string>
+    <string name="versi_n_de_la_app">Versión de la app</string>
+    <string name="preguntas_frecuentes">Preguntas frecuentes</string>
+    <string name="cerrar_sesi_n">Cerrar Sesión</string>
+    <string name="fp_colorname">fp_colorName</string>
+    <string name="colorhex">colorHex</string>
+
 
 </resources>

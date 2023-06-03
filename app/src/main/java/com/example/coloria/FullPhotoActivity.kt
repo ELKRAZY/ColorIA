@@ -187,7 +187,7 @@ class FullPhotoActivity : AppCompatActivity() {
 
     private fun getPhotoList(): Array<File> {
 
-        return savedPhotosViewModel.getphotos(this)
+        return savedPhotosViewModel.getPhotos(this)
 
     }
 }

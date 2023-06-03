@@ -1,9 +1,9 @@
 package com.example.coloria.viewModel
 
 import android.content.Context
+import android.os.Environment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.coloria.colorPicker.ColorModel
 import java.io.File
 
 class SavedPhotosViewModel : ViewModel() {
@@ -13,9 +13,9 @@ class SavedPhotosViewModel : ViewModel() {
     lateinit var photos: Array<File>
     var spList: MutableLiveData<Array<File>> = MutableLiveData()
 
-    fun getphotos(context: Context): Array<File> {
+    fun getPhotos(context: Context): Array<File> {
 
-        val directory = File(context.externalMediaDirs[0].absolutePath)
+        val directory = File(context.getExternalFilesDirs(Environment.MEDIA_MOUNTED)[0].absolutePath)
         photos = directory.listFiles() as Array<File>
         spList.value = photos
 

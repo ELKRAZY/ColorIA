@@ -31,13 +31,13 @@ class SavedPhotoActivity : AppCompatActivity() {
 
         notFoundText = findViewById(R.id.noPhotoTextView)
 
-        files = savedPhotosViewModel.getphotos(this)
+        files = savedPhotosViewModel.getPhotos(this)
 
         val adapter = SavedPhotosAdapter(files.reversedArray(), this)
 
         savedPhotosRv.adapter = adapter
 
-        savedPhotosViewModel.getphotos(this)
+        savedPhotosViewModel.getPhotos(this)
         oberserData()
 
     }

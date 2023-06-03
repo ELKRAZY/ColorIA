@@ -59,7 +59,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/colorName_Hex"
-        android:background="@color/white" />
+        android:background="?attr/backgroundColor"
+        android:importantForAccessibility="no"
+        tools:ignore="ImageContrastCheck" />
 
     <LinearLayout
         android:id="@+id/colorName_Hex"
@@ -78,8 +80,10 @@
             android:fontFamily="casual"
             android:foreground="?attr/selectableItemBackground"
             android:paddingHorizontal="10dp"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:text="@string/fp_colorname"
+            android:textColor="?attr/colorOnPrimary"
+            android:textStyle="bold"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <TextView
             android:id="@+id/fp_colorHex"
@@ -91,19 +95,22 @@
             android:fontFamily="casual"
             android:foreground="?attr/selectableItemBackground"
             android:paddingHorizontal="10dp"
+            android:text="@string/colorhex"
             android:textAlignment="textEnd"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textColor="?attr/colorOnPrimary"
+            android:textStyle="bold"
+            tools:ignore="TouchTargetSizeCheck" />
 
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/deleteBtn"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="5dp"
-        android:background="@drawable/ic_delete" />
+        android:background="@drawable/ic_delete"
+        android:importantForAccessibility="no" />
 </RelativeLayout>
