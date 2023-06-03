@@ -21,7 +21,6 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -31,8 +30,8 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
-import com.example.coloria.databinding.ActivityCameraBinding
 import com.example.coloria.colorPicker.ColorDetectHandler
+import com.example.coloria.databinding.ActivityCameraBinding
 import com.example.coloria.viewModel.ColorDetectViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -69,8 +68,8 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var fabSavedfPhotos: FloatingActionButton
     private lateinit var pointer: View
     private lateinit var cardColor: CardView
-    private lateinit var card_color_preview: CardView
-    private lateinit var card_colorName: TextView
+    private lateinit var cardColorPreview: CardView
+    private lateinit var cardColorName: TextView
     private lateinit var colorHex: TextView
 
     // ViewModel
@@ -92,7 +91,6 @@ class CameraActivity : AppCompatActivity() {
         }
 
     @SuppressLint("ClickableViewAccessibility")
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
 
 
@@ -114,19 +112,19 @@ class CameraActivity : AppCompatActivity() {
         }
 
 
-        cameraPreview.setOnTouchListener { view, motionEvent ->
+        cameraPreview.setOnTouchListener { _, motionEvent ->
 
             // val rectCameraPreview = Rect(10,100,30,0)
 
 
-            card_color_preview.y = motionEvent.y
-            card_color_preview.x = motionEvent.x
+            cardColorPreview.y = motionEvent.y
+            cardColorPreview.x = motionEvent.x
 
-            var pointerX = card_color_preview.x
-            var pointerY = card_color_preview.y
+            var pointerX = cardColorPreview.x
+            var pointerY = cardColorPreview.y
 
-            card_color_preview.x = motionEvent.x - motionEvent.x / 2
-            card_color_preview.y = motionEvent.y - 100
+            cardColorPreview.x = motionEvent.x - motionEvent.x / 2
+            cardColorPreview.y = motionEvent.y - 100
 
             val margin = TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
@@ -192,7 +190,7 @@ class CameraActivity : AppCompatActivity() {
         val b = currColor.b
 
         colorName.text = name
-        card_colorName.text = name
+        cardColorName.text = name
         colorHex.text = "#$hex"
         cardColor.setCardBackgroundColor(Color.rgb(r!!, g!!, b!!))
 
@@ -257,14 +255,22 @@ class CameraActivity : AppCompatActivity() {
         }, 100)
     }
 
+    @SuppressLint("InlinedApi")
     private fun clickGallery() {
-        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-            val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+
+        if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED) {
+            val permissions = arrayOf(permission)
             requestPermissions(permissions, PERMISSION_CODE)
         } else {
             chooseImageGallery()
         }
     }
+
 
     private fun clickSavedPhotos() {
 
@@ -282,31 +288,34 @@ class CameraActivity : AppCompatActivity() {
         startCamera()
     }
 
+    private val galleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            // Aquí puedes obtener los datos de la imagen seleccionada de la galería
+            if (data != null) {
+                try {
+                    val imageUri: Uri? = data.data
+
+                    val intent = Intent(this, FullPhotoActivity::class.java)
+                    intent.putExtra("uri", imageUri.toString())
+                    startActivity(intent)
+
+
+                } catch (e: FileNotFoundException) {
+                    e.printStackTrace()
+                }
+            } else {
+                Toast.makeText(this, "You haven't picked Image", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
     private fun chooseImageGallery() {
         val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-        startActivityForResult(gallery, IMAGE_CHOOSE)
+        galleryLauncher.launch(gallery)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_CHOOSE) {
-            try {
-                val imageUri: Uri? = data?.data
-
-                val intent = Intent(this, FullPhotoActivity::class.java)
-                intent.putExtra("uri", imageUri.toString())
-                startActivity(intent)
-
-
-            } catch (e: FileNotFoundException) {
-                e.printStackTrace()
-            }
-        } else {
-            Toast.makeText(this, "You haven't picked Image", Toast.LENGTH_LONG).show()
-        }
-
-    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -351,8 +360,8 @@ class CameraActivity : AppCompatActivity() {
         colorHex = binding.colorHex
 
         cardColor = binding.cardColor
-        card_colorName = binding.cardColorName
-        card_color_preview = binding.cardColorPreview
+        cardColorName = binding.cardColorName
+        cardColorPreview = binding.cardColorPreview
 
         //ViewModel
         detectViewModel = ColorDetectViewModel()
@@ -364,17 +373,17 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
-    private fun getPhotoList(): Array<File> {
-
-        val directory = File(externalMediaDirs[0].absolutePath)
-        val files = directory.listFiles() as Array<File>
-
-        return files
-    }
+//    private fun getPhotoList(): Array<File> {
+//
+//        val directory = File(externalMediaDirs[0].absolutePath)
+//        val files = directory.listFiles() as Array<File>
+//
+//        return files
+//    }
 
     companion object {
         const val TAG = "CameraActivity"
-        private const val IMAGE_CHOOSE = 1000
+//        private const val IMAGE_CHOOSE = 1000
         private const val PERMISSION_CODE = 1001
     }
 }

@@ -34,24 +34,24 @@ class ColorModel(colorname: String, R: Int, G: Int, B: Int) {
                 * (pixB - b!!))) / 3)
     }
 
-    fun gethex(): String{
-        return hex!!
-    }
-
-    fun getR(): Int {
-        return r!!
-    }
-
-    fun getG(): Int {
-        return g!!
-    }
-
-    fun getB(): Int {
-        return b!!
-    }
-
-    fun getColorName(): String? {
-        return name
-    }
+//    fun gethex(): String{
+//        return hex!!
+//    }
+//
+//    fun getR(): Int {
+//        return r!!
+//    }
+//
+//    fun getG(): Int {
+//        return g!!
+//    }
+//
+//    fun getB(): Int {
+//        return b!!
+//    }
+//
+//    fun getColorName(): String? {
+//        return name
+//    }
 
 }

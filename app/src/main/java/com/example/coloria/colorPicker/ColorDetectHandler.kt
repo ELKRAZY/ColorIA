@@ -2,12 +2,12 @@ package com.example.coloria.colorPicker
 
 
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.camera.view.PreviewView
-import com.example.coloria.colorPicker.ColorModel
 import com.example.coloria.viewModel.ColorDetectViewModel
 
 class ColorDetectHandler {
@@ -28,9 +28,9 @@ class ColorDetectHandler {
 
     private var bitmap: Bitmap? = null
 
-    lateinit var currColor: ColorModel
+    private lateinit var currColor: ColorModel
 
-    var detectViewModel: ColorDetectViewModel = ColorDetectViewModel()
+    private var detectViewModel: ColorDetectViewModel = ColorDetectViewModel()
 
     fun detect(cameraPreview: PreviewView, pointer: View): ColorModel {
         bitmap = cameraPreview.bitmap!!
@@ -67,10 +67,16 @@ class ColorDetectHandler {
 
     }
 
-    fun detect(photo: ImageView, pointer: View): ColorModel {
+    private fun getBitmapFromView(view: View): Bitmap {
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        view.draw(canvas)
+        return bitmap
+    }
 
-        photo.isDrawingCacheEnabled = true
-        bitmap = photo.drawingCache
+
+    fun detect(photo: ImageView, pointer: View): ColorModel {
+        val bitmap = getBitmapFromView(photo)
 
         x = pointer.x + (pointer.width / 2).toFloat()
         y = pointer.y + (pointer.height / 2).toFloat()
@@ -79,13 +85,11 @@ class ColorDetectHandler {
             x  = photo.right - 1f
         }
 
-
-
         if (y >= photo.bottom){
             y = photo.bottom - 1f
         }
 
-        pixel = bitmap!!.getPixel(x.toInt(), y.toInt())
+        pixel = bitmap.getPixel(x.toInt(), y.toInt())
 
         r = Color.red(pixel)
         g = Color.green(pixel)
@@ -100,6 +104,6 @@ class ColorDetectHandler {
         currColor = ColorModel(name, r, g, b, hex)
 
         return currColor
-
     }
+
 }
