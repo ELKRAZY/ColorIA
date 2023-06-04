@@ -63,9 +63,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_margin="10dp"
-        android:backgroundTint="@color/white"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        app:backgroundTint="?attr/backgroundColor"
         android:elevation="10dp"
+        app:tint="@null"
         android:src="@drawable/ic_saved_photos"
         tools:ignore="RelativeOverlap" />
 
