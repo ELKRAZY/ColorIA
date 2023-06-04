@@ -151,7 +151,8 @@
             android:drawableEnd="@drawable/user_person"
             android:fontFamily="@font/roboto_medium"
             android:gravity="center|start"
-            android:text="@string/informacion" />
+            android:text="@string/informacion"
+            tools:ignore="VisualLintButtonSize" />
 
         <Button
             android:id="@+id/button2"
@@ -257,7 +258,8 @@
             android:layout_height="wrap_content"
             app:itemTextColor="@color/text_color"
             app:labelVisibilityMode="labeled"
-            app:menu="@menu/bottom_navigation" />
+            app:menu="@menu/bottom_navigation"
+            tools:ignore="VisualLintBottomNav" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

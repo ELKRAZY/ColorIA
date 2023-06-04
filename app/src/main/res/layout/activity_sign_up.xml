@@ -22,10 +22,11 @@
         android:id="@+id/imageView2"
         android:layout_width="151dp"
         android:layout_height="32dp"
-        android:layout_marginBottom="20dp"
         android:layout_marginStart="3dp"
+        android:layout_marginBottom="20dp"
+        android:importantForAccessibility="no"
         app:srcCompat="@drawable/logo2"
-        android:importantForAccessibility="no" />
+        tools:ignore="ImageContrastCheck" />
 
     <EditText
         android:id="@+id/editTextEmail"
@@ -40,7 +41,8 @@
         android:hint="@string/email"
         android:inputType="textEmailAddress"
         android:minHeight="48dp"
-        android:importantForAutofill="no" />
+        android:importantForAutofill="no"
+        tools:ignore="VisualLintTextFieldSize" />
 
     <EditText
         android:id="@+id/editTextTextUserName"
@@ -53,7 +55,7 @@
         android:ems="10"
         android:hint="@string/nombre_de_usuario"
         android:inputType="textPersonName"
-        tools:ignore="TouchTargetSizeCheck"
+        tools:ignore="TouchTargetSizeCheck,VisualLintTextFieldSize"
         android:importantForAutofill="no" />
 
     <EditText
@@ -68,7 +70,8 @@
         android:hint="@string/contrase_a"
         android:inputType="textPassword"
         android:minHeight="48dp"
-        android:importantForAutofill="no" />
+        android:importantForAutofill="no"
+        tools:ignore="VisualLintTextFieldSize" />
 
     <EditText
         android:id="@+id/editTextTextPasswordConfirm"
@@ -82,7 +85,8 @@
         android:hint="@string/confirmar_contrase_a"
         android:inputType="textPassword"
         android:minHeight="48dp"
-        android:importantForAutofill="no" />
+        android:importantForAutofill="no"
+        tools:ignore="VisualLintTextFieldSize" />
 
     <Button
         android:id="@+id/button_RegGoogle"
@@ -100,7 +104,8 @@
         app:iconGravity="start"
         app:iconPadding="-20dp"
         app:iconSize="25dip"
-        app:iconTint="@null" />
+        app:iconTint="@null"
+        tools:ignore="VisualLintButtonSize" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_SingUp"
@@ -111,6 +116,7 @@
         android:layout_marginBottom="30dp"
         android:radius="20dp"
         android:background="@drawable/buttongradientcolor"
-        android:text="@string/registrar" />
+        android:text="@string/registrar"
+        tools:ignore="VisualLintButtonSize" />
 
 </LinearLayout>
