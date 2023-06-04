@@ -12,6 +12,7 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.util.TypedValue
@@ -219,7 +220,7 @@ class CameraActivity : AppCompatActivity() {
     private fun takePhoto() {
         imageCapture?.let {
             val fileName = "JPEG_${System.currentTimeMillis()}"
-            val file = File(externalMediaDirs[0], fileName)
+            val file = File(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName)
 
             val outputFileOptions = ImageCapture.OutputFileOptions.Builder(file).build()
             it.takePicture(

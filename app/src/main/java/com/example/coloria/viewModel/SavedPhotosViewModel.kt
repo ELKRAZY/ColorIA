@@ -10,12 +10,12 @@ class SavedPhotosViewModel : ViewModel() {
 
     var spError = MutableLiveData<Boolean>()
     var spNotFound = MutableLiveData<Boolean>()
-    lateinit var photos: Array<File>
+    private lateinit var photos: Array<File>
     var spList: MutableLiveData<Array<File>> = MutableLiveData()
 
     fun getPhotos(context: Context): Array<File> {
 
-        val directory = File(context.getExternalFilesDirs(Environment.MEDIA_MOUNTED)[0].absolutePath)
+        val directory = File(context.getExternalFilesDirs(Environment.DIRECTORY_PICTURES)[0].absolutePath)
         photos = directory.listFiles() as Array<File>
         spList.value = photos
 
