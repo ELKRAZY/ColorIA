@@ -20,14 +20,12 @@ import com.squareup.picasso.Picasso
 
 private lateinit var bottomNavigationView: BottomNavigationView
 
-
 class MainActivity : AppCompatActivity() {
     private val db = Firebase.firestore
     private lateinit var binding: ActivityMainBinding
     private val users = FirebaseAuth.getInstance().currentUser
     private lateinit var imageUri: Uri
     private val email = users?.email
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,12 +38,10 @@ class MainActivity : AppCompatActivity() {
         setUserData()
         editPfp()
 
-
         //Buttons
         logoutButton()
 
         binding.bottomNavigation.selectedItemId = R.id.perfil
-
 
         binding.bottomNavigation.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -68,6 +64,9 @@ class MainActivity : AppCompatActivity() {
                 R.id.historial -> {
                     // Abre la actividad correspondiente para "Historial"
                     // ...
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, FragmentHistory())
+                        .commit()
                     true
                 }
                 R.id.perfil -> {
@@ -77,11 +76,8 @@ class MainActivity : AppCompatActivity() {
                 }
                 else -> false
             }
+        }
     }
-    }
-
-
-
 
     private fun editPfp() {
         val imageViewPfp = binding.imageViewPfp
@@ -106,7 +102,7 @@ class MainActivity : AppCompatActivity() {
         if (uri != null) {
             imageUri = uri
             val storageRef = FirebaseStorage.getInstance().reference
-            val imageRef = storageRef.child("images/$imageUri") // Utiliza el email como nombre del archivo en Firebase Storage
+            val imageRef = storageRef.child("images/${email}") // Utiliza el email como nombre del archivo en Firebase Storage
             val uploadTask = imageRef.putFile(imageUri)
             uploadTask.continueWithTask { task ->
                 if (!task.isSuccessful) {
@@ -145,7 +141,6 @@ class MainActivity : AppCompatActivity() {
         getContent.launch("image/*")
     }
 
-
     private fun setUserData() {
         val textViewName = binding.textViewName
         val textViewEmail = binding.textViewEmail
@@ -165,8 +160,6 @@ class MainActivity : AppCompatActivity() {
                         Picasso.get().load(imageUrl).into(imageViewPfp)
                         //imageViewPfp.setImageURI(imageUrl.toUri())
                     }
-
-
                 } else {
                     val text = "El nombre de usuario no se pudo obtener!"
                     showToast(text)
@@ -174,10 +167,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }.addOnFailureListener {
                 // Manejo de errores al obtener los datos de Firestore
-                val text = "errores al obtener los datos de la base de datos!"
+                val text = "Errores al obtener los datos de la base de datos!"
                 showToast(text)
             }
-        }else{
+        } else {
             val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit()
             prefs.clear()
             prefs.apply()
@@ -185,7 +178,6 @@ class MainActivity : AppCompatActivity() {
             FirebaseAuth.getInstance().signOut()
             onBackPressedDispatcher.onBackPressed()
         }
-
     }
 
     //Button method that cleans the shared preferences file and takes you back to the login (signOut)
@@ -198,7 +190,6 @@ class MainActivity : AppCompatActivity() {
             FirebaseAuth.getInstance().signOut()
             onBackPressedDispatcher.onBackPressed()
         }
-
     }
 
     private fun getUserData(): Task<QuerySnapshot> {
@@ -211,17 +202,9 @@ class MainActivity : AppCompatActivity() {
         return query.get()
     }
 
-
-
-
-
     private fun showToast(text: String){
         val duration = Toast.LENGTH_SHORT
         val toast = Toast.makeText(applicationContext, text, duration)
         toast.show()
     }
-
-
-
-
 }

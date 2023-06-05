@@ -8,6 +8,18 @@
     android:background="?attr/backgroundColor"
     tools:context=".MainActivity">
 
+    <!-- Contenedor de Fragmentos -->
+    <fragment
+        android:id="@+id/fragmentContainer"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout10" />
+
+    <!-- Resto del código del diseño -->
+
+    <!-- LinearLayout y BottomNavigationView omitidos para mayor claridad -->
     <LinearLayout
         android:id="@+id/linearLayout10"
         android:layout_width="0dp"
