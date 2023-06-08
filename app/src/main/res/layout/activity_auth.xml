@@ -48,7 +48,8 @@
             android:ems="10"
             android:hint="Email"
             android:inputType="textEmailAddress"
-            android:minHeight="48dp" />
+            android:minHeight="48dp"
+            android:autofillHints="" />
 
         <EditText
             android:id="@+id/editTextPassword"
