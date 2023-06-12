@@ -1,23 +1,15 @@
 package com.example.coloria
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.coloria.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 
 private lateinit var bottomNavigationView: BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
-    private val db = Firebase.firestore
     private lateinit var binding: ActivityMainBinding
-    private val users = FirebaseAuth.getInstance().currentUser
-    private lateinit var imageUri: Uri
-    private val email = users?.email
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
@@ -17,9 +18,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.bumptech.glide.Glide
+import com.example.coloria.CameraActivity.Companion.TAG
 import com.example.coloria.colorPicker.ColorDetectHandler
 import com.example.coloria.databinding.ActivityFullPhotoBinding
 import com.example.coloria.viewModel.SavedPhotosViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import java.io.File
 
 class FullPhotoActivity : AppCompatActivity() {
@@ -31,6 +36,11 @@ class FullPhotoActivity : AppCompatActivity() {
     private lateinit var uri: Uri
 
     private lateinit var fileName: String
+    private val db = Firebase.firestore
+    private val users = FirebaseAuth.getInstance().currentUser
+    private val email = users?.email
+
+
 
     // Views
     private lateinit var photo: ImageView
@@ -53,7 +63,28 @@ class FullPhotoActivity : AppCompatActivity() {
         setInit()
 
         fpColorHex.setOnClickListener {
-            copyText(fpColorHex.text.toString())
+
+            val text = fpColorHex.text.toString()
+            copyText(text)
+            val usersCollectionRef = db.collection("colorlist").document(email.toString())
+
+            usersCollectionRef.get().addOnSuccessListener { documentSnapshot ->
+                val colorArrayList = documentSnapshot.get("colorArrayList") as? ArrayList<String>
+                colorArrayList?.add(text) // Añade el color al ArrayList existente o crea uno nuevo si es nulo
+
+                usersCollectionRef.update("colorArrayList", colorArrayList)
+                    .addOnSuccessListener {
+                        // La actualización se realizó con éxito
+                        Log.d(TAG, "Color added to ArrayList in Firebase")
+                    }
+                    .addOnFailureListener { e ->
+                        // Ocurrió un error al realizar la actualización
+                        Log.e(TAG, "Failed to add color to ArrayList in Firebase", e)
+                    }
+            }.addOnFailureListener { e ->
+                // Ocurrió un error al obtener el documento de Firebase
+                Log.e(TAG, "Failed to get document from Firebase", e)
+            }
         }
 
         fpColorName.setOnClickListener {
@@ -168,7 +199,11 @@ class FullPhotoActivity : AppCompatActivity() {
         val clipData = ClipData.newPlainText("copy_text", text)
         clipboardManager.setPrimaryClip(clipData)
         Toast.makeText(applicationContext, "Copied $text", Toast.LENGTH_SHORT).show()
+
+
     }
+
+
 
     private fun intentToSavedPhotos(){
         val intent = Intent(this, SavedPhotoActivity::class.java)

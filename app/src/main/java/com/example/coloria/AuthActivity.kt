@@ -88,8 +88,6 @@ class AuthActivity : AppCompatActivity() {
                         // Iniciar la actividad ActivitySignIn
                         startActivity(intent)
 
-
-
              }else{
                         val text = " La contraseña y/o el email no son correctos"
                         showToast(text)
@@ -132,7 +130,6 @@ class AuthActivity : AppCompatActivity() {
         if (result.resultCode == Activity.RESULT_OK) {
             // El inicio de sesión fue exitoso, puedes obtener el token de acceso aquí
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-
             try {
                 val token = task.getResult(ApiException::class.java)
                 // hacer algo con el token aquí
@@ -144,27 +141,56 @@ class AuthActivity : AppCompatActivity() {
                             if (users != null) {
                                 val email = users.email
                                 val username = email?.substringBefore("@")
-                                val user = hashMapOf("userName" to username, "email" to email)
-
-                                db.collection("users").document(email.toString())
-                                    .set(user)
-                                    .addOnCompleteListener { dbTask ->
-                                        if (dbTask.isSuccessful) {
+                                val coll = db.collection("users").document(email.toString())
+                                coll.get().addOnSuccessListener { document ->
+                                    if (document != null && document.exists()) {
+                                        val email = document.getString("email")
+                                        if (email != null) {
+                                            // El campo "email" se ha obtenido correctamente
                                             val prefs = getSharedPreferences(getString(R.string.gprefs_file), Context.MODE_PRIVATE).edit()
                                             prefs.putString("google_id_token", token.idToken)
                                             prefs.apply()
 
-                                            val intent = Intent(this, AuthActivity::class.java)
+                                            val intent = Intent(this, MainActivity::class.java)
                                             val text = "Bienvenido!"
                                             showToast(text)
 
                                             // Iniciar la actividad ActivitySignIn
                                             startActivity(intent)
-                                        } else {
-                                            val text = "Error al guardar el usuario en la base de datos!"
-                                            showToast(text)
                                         }
+                                    } else {
+                                        // El documento no existe
+                                        val user = hashMapOf("userName" to username, "email" to email, "pfp" to "")
+                                        db.collection("users").document(email.toString())
+                                            .set(user)
+                                            .addOnCompleteListener { dbTask ->
+                                                if (dbTask.isSuccessful) {
+                                                    val prefs = getSharedPreferences(getString(R.string.gprefs_file), Context.MODE_PRIVATE).edit()
+                                                    prefs.putString("google_id_token", token.idToken)
+                                                    prefs.apply()
+
+
+                                                db.collection("colorlist").document(email.toString())
+                                                    .set(hashMapOf("colorArrayList" to arrayListOf<String>()))
+
+                                                    val intent = Intent(this, MainActivity::class.java)
+                                                    val text = "Bienvenido!"
+                                                    showToast(text)
+
+                                                    // Iniciar la actividad ActivitySignIn
+                                                    startActivity(intent)
+                                                } else {
+                                                    val text = "Error al guardar el usuario en la base de datos!"
+                                                    showToast(text)
+                                                }
+                                            }
                                     }
+                                }.addOnFailureListener { exception ->
+                                    // Manejar la excepción, si ocurre
+                                }
+
+
+
                             }
                             // Iniciar la actividad ActivitySignIn
                             startActivity(intent)

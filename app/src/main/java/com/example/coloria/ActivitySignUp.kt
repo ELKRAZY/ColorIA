@@ -72,7 +72,7 @@ class ActivitySignUp : AppCompatActivity() {
                         FirebaseAuth.getInstance().createUserWithEmailAndPassword(editTextEmail.text.toString(), editTextPassword.text.toString()).addOnCompleteListener {
                         if(it.isSuccessful){
                             val user = hashMapOf("userName" to editTextUserName.text.toString(), "email" to editTextEmail.text.toString(), "pfp" to "")
-
+                            val colorArrayList = ArrayList<String>()
                             db.collection("users").document(editTextEmail.text.toString())
                                 .set(user)
                                 .addOnCompleteListener { dbTask ->
@@ -83,6 +83,10 @@ class ActivitySignUp : AppCompatActivity() {
                                         ).edit()
                                         prefs.putString("UserName", editTextUserName.text.toString())
                                         prefs.apply()
+
+//                                        db.collection("colorlist").document(editTextEmail.text.toString())
+//                                            .set(colorArrayList)
+
 
                                         val intent = Intent(this, AuthActivity::class.java)
                                         val text = "Bienvenido!"
@@ -105,7 +109,6 @@ class ActivitySignUp : AppCompatActivity() {
                     }else{
                     val text = "Ha sucedido un error"
                     showToast(text)
-
             }
 
         }
@@ -126,34 +129,65 @@ class ActivitySignUp : AppCompatActivity() {
                         if (it.isSuccessful) {
 
                             val users = FirebaseAuth.getInstance().currentUser
+
                             if (users != null) {
+
                                 val email = users.email
                                 val username = email?.substringBefore("@")
-                                val user = hashMapOf("userName" to username, "email" to email, "pfp" to "")
 
-                                db.collection("users").document(email.toString())
-                                    .set(user)
-                                    .addOnCompleteListener { dbTask ->
-                                        if (dbTask.isSuccessful) {
+                                val coll = db.collection("users").document(email.toString())
+                                coll.get().addOnSuccessListener { document ->
+                                    if (document != null && document.exists()) {
+                                        val email = document.getString("email")
+                                        if (email != null) {
+                                            // El campo "email" se ha obtenido correctamente
                                             val prefs = getSharedPreferences(getString(R.string.gprefs_file), Context.MODE_PRIVATE).edit()
                                             prefs.putString("google_id_token", token.idToken)
                                             prefs.apply()
 
-                                            val intent = Intent(this, AuthActivity::class.java)
+                                            val intent = Intent(this, MainActivity::class.java)
                                             val text = "Bienvenido!"
                                             showToast(text)
 
                                             // Iniciar la actividad ActivitySignIn
                                             startActivity(intent)
-                                        } else {
-                                            val text = "Error al guardar el usuario en la base de datos!"
-                                            showToast(text)
                                         }
+                                    } else {
+                                        // El documento no existe
+                                        val user = hashMapOf("userName" to username, "email" to email, "pfp" to "")
+                                        db.collection("users").document(email.toString())
+                                            .set(user)
+                                            .addOnCompleteListener { dbTask ->
+                                                if (dbTask.isSuccessful) {
+                                                    val prefs = getSharedPreferences(getString(R.string.gprefs_file), Context.MODE_PRIVATE).edit()
+                                                    prefs.putString("google_id_token", token.idToken)
+                                                    prefs.apply()
+
+                                                val colorArrayList = ArrayList<String>()
+
+                                                db.collection("colorlist").document(email.toString())
+                                                    .set(colorArrayList)
+
+                                                    val intent = Intent(this, MainActivity::class.java)
+                                                    val text = "Bienvenido!"
+                                                    showToast(text)
+
+                                                    // Iniciar la actividad ActivitySignIn
+                                                    startActivity(intent)
+                                                } else {
+                                                    val text = "Error al guardar el usuario en la base de datos!"
+                                                    showToast(text)
+                                                }
+                                            }
                                     }
+                                }.addOnFailureListener { exception ->
+                                    // Manejar la excepción, si ocurre
+                                }
+
                             }
 
                             // Iniciar la actividad ActivitySignIn
-                            startActivity(intent)
+                            //startActivity(intent)
                         } else {
                             val text = "Se ha producido un error al obtener el usuario!"
                             showToast(text)

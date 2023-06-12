@@ -37,6 +37,9 @@ import com.example.coloria.viewModel.ColorDetectViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.common.util.concurrent.ListenableFuture
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import java.io.File
 import java.io.FileNotFoundException
 import java.util.*
@@ -72,6 +75,10 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var cardColorPreview: CardView
     private lateinit var cardColorName: TextView
     private lateinit var colorHex: TextView
+
+    private val db = Firebase.firestore
+    private val users = FirebaseAuth.getInstance().currentUser
+    private val email = users?.email
 
     // ViewModel
     private lateinit var detectViewModel: ColorDetectViewModel
@@ -340,6 +347,26 @@ class CameraActivity : AppCompatActivity() {
         val clipData = ClipData.newPlainText("copy_text", text)
         clipboardManager.setPrimaryClip(clipData)
         Toast.makeText(applicationContext, "Copied $text", Toast.LENGTH_SHORT).show()
+
+        val usersCollectionRef = db.collection("colorlist").document(email.toString())
+
+        usersCollectionRef.get().addOnSuccessListener { documentSnapshot ->
+            val colorArrayList = documentSnapshot.get("colorArrayList") as? ArrayList<String>
+            colorArrayList?.add(text) // Añade el color al ArrayList existente o crea uno nuevo si es nulo
+
+            usersCollectionRef.update("colorArrayList", colorArrayList)
+                .addOnSuccessListener {
+                    // La actualización se realizó con éxito
+                    Log.d(TAG, "Color added to ArrayList in Firebase")
+                }
+                .addOnFailureListener { e ->
+                    // Ocurrió un error al realizar la actualización
+                    Log.e(TAG, "Failed to add color to ArrayList in Firebase", e)
+                }
+        }.addOnFailureListener { e ->
+            // Ocurrió un error al obtener el documento de Firebase
+            Log.e(TAG, "Failed to get document from Firebase", e)
+        }
     }
 
     private fun setInit() {

@@ -1,6 +1,7 @@
 package com.example.coloria
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +10,20 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coloria.databinding.FragmentHistoryListBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.tasks.await
+import java.util.ArrayList
 
 class FragmentHistory : Fragment() {
 
     private var columnCount = 1
     private lateinit var binding: FragmentHistoryListBinding
     private lateinit var adapter: MyItemRecyclerViewAdapter
+    private val db = Firebase.firestore
+    private val users = FirebaseAuth.getInstance().currentUser
+    private val email = users?.email
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,10 +52,29 @@ class FragmentHistory : Fragment() {
         return view
     }
 
-    private fun getColorList(): List<String> {
-        // Aquí puedes proporcionar la lista de colores que deseas mostrar en el RecyclerView
-        return listOf("#FF0000", "#00FF00", "#0000FF")
+
+    interface ColorListCallback {
+        fun onColorListReady(colorList: List<String>)
     }
+    private fun getColorList(callback: ColorListCallback) {
+        val usersCollectionRef = db.collection("colorlist").document(email.toString())
+        var colorList = listOf<String>()
+
+        usersCollectionRef.get().addOnSuccessListener { documentSnapshot ->
+            val colorArrayList = documentSnapshot.get("colorArrayList") as? ArrayList<String>
+            if (colorArrayList != null) {
+                colorList = colorArrayList
+
+            }
+            callback.onColorListReady(colorList)
+        }.addOnFailureListener { e ->
+            // Ocurrió un error al obtener el documento de Firebase
+            Log.e(CameraActivity.TAG, "Failed to get document from Firebase", e)
+            callback.onColorListReady(colorList)
+        }
+    }
+
+
 
     companion object {
         const val ARG_COLUMN_COUNT = "column-count"
