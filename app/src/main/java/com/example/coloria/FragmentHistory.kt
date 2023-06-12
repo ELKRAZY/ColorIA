@@ -8,13 +8,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.coloria.databinding.FragmentHistoryListBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.tasks.await
-import java.util.ArrayList
 
 class FragmentHistory : Fragment() {
 
@@ -36,7 +33,7 @@ class FragmentHistory : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentHistoryListBinding.inflate(inflater, container, false)
         val view = binding.root
 
@@ -46,34 +43,28 @@ class FragmentHistory : Fragment() {
             columnCount <= 1 -> LinearLayoutManager(context)
             else -> GridLayoutManager(context, columnCount)
         }
-        adapter = MyItemRecyclerViewAdapter(getColorList())
-        recyclerView.adapter = adapter
 
-        return view
-    }
-
-
-    interface ColorListCallback {
-        fun onColorListReady(colorList: List<String>)
-    }
-    private fun getColorList(callback: ColorListCallback) {
         val usersCollectionRef = db.collection("colorlist").document(email.toString())
-        var colorList = listOf<String>()
+        var colorList: List<String>
+
 
         usersCollectionRef.get().addOnSuccessListener { documentSnapshot ->
             val colorArrayList = documentSnapshot.get("colorArrayList") as? ArrayList<String>
             if (colorArrayList != null) {
                 colorList = colorArrayList
-
+                adapter = MyItemRecyclerViewAdapter(colorList)
+                recyclerView.adapter = adapter
             }
-            callback.onColorListReady(colorList)
+
         }.addOnFailureListener { e ->
             // Ocurrió un error al obtener el documento de Firebase
             Log.e(CameraActivity.TAG, "Failed to get document from Firebase", e)
-            callback.onColorListReady(colorList)
         }
-    }
 
+
+
+        return view
+    }
 
 
     companion object {

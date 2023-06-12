@@ -1,5 +1,6 @@
 package com.example.coloria
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -24,16 +25,16 @@ class MyItemRecyclerViewAdapter(private val colors: List<String>) : RecyclerView
     inner class ViewHolder(private val binding: ListItemColorBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(color: String) {
-            binding.colorSquare.setBackgroundColor(android.graphics.Color.parseColor(color))
+            binding.colorSquare.setBackgroundColor(Color.parseColor(color))
             binding.hexValue.text = color
             binding.rgbValue.text = convertHexToRgb(color)
         }
 
         private fun convertHexToRgb(hex: String): String {
-            val color = android.graphics.Color.parseColor(hex)
-            val red = android.graphics.Color.red(color)
-            val green = android.graphics.Color.green(color)
-            val blue = android.graphics.Color.blue(color)
+            val color = Color.parseColor(hex)
+            val red = Color.red(color)
+            val green = Color.green(color)
+            val blue = Color.blue(color)
             return "RGB: $red, $green, $blue"
         }
     }

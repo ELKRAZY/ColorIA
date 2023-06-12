@@ -59,7 +59,7 @@ class ColorDetectHandler {
         name = detectViewModel.getColorNameFromRgb(r, g, b)!!
 
         rgb = Color.rgb(r, g, b)
-        hex = Integer.toHexString(rgb and 0x00ffffff)
+        hex = String.format("%06X", rgb and 0x00ffffff)
 
         currColor = ColorModel(name, r, g, b, hex)
 
@@ -99,7 +99,7 @@ class ColorDetectHandler {
         name = detectViewModel.getColorNameFromRgb(r, g, b)!!
 
         rgb = Color.rgb(r, g, b)
-        hex = Integer.toHexString(rgb and 0x00ffffff)
+        hex = String.format("%06X", rgb and 0x00ffffff)
 
         currColor = ColorModel(name, r, g, b, hex)
 
