@@ -41,9 +41,30 @@ class MainFragment : Fragment() {
         //UserData
         setUserData()
         editPfp()
+        resetPass()
 
         binding.buttonLogOut.setOnClickListener {
             logoutButton()
+        }
+    }
+
+    private fun resetPass(){
+        binding.buttonPass.setOnClickListener{
+            val auth = FirebaseAuth.getInstance()
+            val user = FirebaseAuth.getInstance().currentUser
+            val email = user?.email
+
+            auth.sendPasswordResetEmail(email.toString())
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        // El correo electrónico para restablecer la contraseña se ha enviado correctamente
+                        showToast("Correo electrónico para restablecer la contraseña enviado")
+                    } else {
+                        // Ocurrió un error al enviar el correo electrónico para restablecer la contraseña
+                        val error = task.exception
+                        showToast("Error al enviar el correo electrónico para restablecer la contraseña: $error")
+                    }
+                }
         }
     }
 

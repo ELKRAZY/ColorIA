@@ -5,8 +5,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coloria.databinding.ListItemColorBinding
+import android.widget.CheckBox
+
 
 class MyItemRecyclerViewAdapter(private val colors: List<String>) : RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder>() {
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ListItemColorBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -16,6 +19,14 @@ class MyItemRecyclerViewAdapter(private val colors: List<String>) : RecyclerView
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val color = colors[position]
         holder.bind(color)
+
+        holder.favoriteCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                favoritesList.add(color)
+            } else {
+                favoritesList.remove(color)
+            }
+        }
     }
 
     override fun getItemCount(): Int {
@@ -23,11 +34,15 @@ class MyItemRecyclerViewAdapter(private val colors: List<String>) : RecyclerView
     }
 
     inner class ViewHolder(private val binding: ListItemColorBinding) : RecyclerView.ViewHolder(binding.root) {
+        val favoriteCheckbox =  binding.favoriteCheckbox
+
 
         fun bind(color: String) {
             binding.colorSquare.setBackgroundColor(Color.parseColor(color))
             binding.hexValue.text = color
             binding.rgbValue.text = convertHexToRgb(color)
+            favoriteCheckbox.isChecked = favoritesList.contains(color)
+
         }
 
         private fun convertHexToRgb(hex: String): String {

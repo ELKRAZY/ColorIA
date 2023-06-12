@@ -77,6 +77,8 @@ class ActivitySignUp : AppCompatActivity() {
                                 .set(user)
                                 .addOnCompleteListener { dbTask ->
                                     if (dbTask.isSuccessful) {
+                                        val email = editTextEmail.text.toString()
+
                                         val prefs = getSharedPreferences(
                                             getString(R.string.prefs_file),
                                             Context.MODE_PRIVATE
@@ -84,9 +86,8 @@ class ActivitySignUp : AppCompatActivity() {
                                         prefs.putString("UserName", editTextUserName.text.toString())
                                         prefs.apply()
 
-//                                        db.collection("colorlist").document(editTextEmail.text.toString())
-//                                            .set(colorArrayList)
-
+                                        db.collection("colorlist").document(email)
+                                            .set(hashMapOf("colorArrayList" to arrayListOf<String>()))
 
                                         val intent = Intent(this, AuthActivity::class.java)
                                         val text = "Bienvenido!"
@@ -100,8 +101,6 @@ class ActivitySignUp : AppCompatActivity() {
                                     }
                                 }
 
-                            // Iniciar la actividad ActivitySignIn
-                            startActivity(intent)
                         }
 
                     }
@@ -163,12 +162,10 @@ class ActivitySignUp : AppCompatActivity() {
                                                     prefs.putString("google_id_token", token.idToken)
                                                     prefs.apply()
 
-                                                val colorArrayList = ArrayList<String>()
+                                                    db.collection("colorlist").document(email.toString())
+                                                        .set(hashMapOf("colorArrayList" to arrayListOf<String>()))
 
-                                                db.collection("colorlist").document(email.toString())
-                                                    .set(colorArrayList)
-
-                                                    val intent = Intent(this, MainActivity::class.java)
+                                                    val intent = Intent(this, AuthActivity::class.java)
                                                     val text = "Bienvenido!"
                                                     showToast(text)
 
