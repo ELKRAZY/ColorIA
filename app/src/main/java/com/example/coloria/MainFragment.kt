@@ -42,10 +42,17 @@ class MainFragment : Fragment() {
         setUserData()
         editPfp()
         resetPass()
-
+        AppVersion()
         binding.buttonLogOut.setOnClickListener {
             logoutButton()
         }
+    }
+
+    private fun AppVersion(){
+        binding.buttonVersion.setOnClickListener{
+            showToast(BuildConfig.VERSION_NAME)
+        }
+
     }
 
     private fun resetPass(){

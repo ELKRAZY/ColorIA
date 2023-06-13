@@ -70,6 +70,7 @@
     <string name="cerrar_sesi_n">Cerrar Sesión</string>
     <string name="fp_colorname">fp_colorName</string>
     <string name="colorhex">colorHex</string>
+    <string name="enviar_lista">Enviar lista</string>
 
 
 </resources>

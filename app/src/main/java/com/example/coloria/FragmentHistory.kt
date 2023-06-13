@@ -1,5 +1,6 @@
 package com.example.coloria
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -55,14 +56,24 @@ class FragmentHistory : Fragment() {
                 colorList = colorArrayList
                 adapter = MyItemRecyclerViewAdapter(colorList)
                 recyclerView.adapter = adapter
+
+                binding.sendButton.setOnClickListener {
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, colorList.joinToString(", "))
+                        type = "text/plain"
+                    }
+                    val shareIntent = Intent.createChooser(sendIntent, null)
+
+                    startActivity(shareIntent)
+
+                }
             }
 
         }.addOnFailureListener { e ->
             // Ocurrió un error al obtener el documento de Firebase
             Log.e(CameraActivity.TAG, "Failed to get document from Firebase", e)
         }
-
-
 
         return view
     }

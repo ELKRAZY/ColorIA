@@ -18,12 +18,6 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
         bottomNavigationView = binding.bottomNavigation
 
-        //UserData
-//        setUserData()
-//        editPfp()
-//
-//        //Buttons
-//        logoutButton()
 
 
         binding.bottomNavigation.setOnItemSelectedListener { menuItem ->
