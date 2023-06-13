@@ -87,7 +87,7 @@ class ActivitySignUp : AppCompatActivity() {
                                         prefs.apply()
 
                                         db.collection("colorlist").document(email)
-                                            .set(hashMapOf("colorArrayList" to arrayListOf<String>()))
+                                            .set(hashMapOf("colorArrayList" to arrayListOf<String>(), "favColorList" to arrayListOf()))
 
                                         val intent = Intent(this, AuthActivity::class.java)
                                         val text = "Bienvenido!"
@@ -163,7 +163,7 @@ class ActivitySignUp : AppCompatActivity() {
                                                     prefs.apply()
 
                                                     db.collection("colorlist").document(email.toString())
-                                                        .set(hashMapOf("colorArrayList" to arrayListOf<String>()))
+                                                        .set(hashMapOf("colorArrayList" to arrayListOf<String>(), "favColorList" to arrayListOf()))
 
                                                     val intent = Intent(this, AuthActivity::class.java)
                                                     val text = "Bienvenido!"
@@ -177,7 +177,7 @@ class ActivitySignUp : AppCompatActivity() {
                                                 }
                                             }
                                     }
-                                }.addOnFailureListener { exception ->
+                                }.addOnFailureListener {
                                     // Manejar la excepción, si ocurre
                                 }
 

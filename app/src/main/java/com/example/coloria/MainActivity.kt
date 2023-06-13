@@ -41,7 +41,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.favoritos -> {
                     // Abre la actividad correspondiente para "Favoritos"
-                    // ...
+                    val fragment = FavsFragment()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, fragment)
+                        .commit()
                     true
                 }
                 R.id.historial -> {

@@ -171,7 +171,10 @@ class AuthActivity : AppCompatActivity() {
 
 
                                                 db.collection("colorlist").document(email.toString())
-                                                    .set(hashMapOf("colorArrayList" to arrayListOf<String>()))
+                                                    .set(hashMapOf("colorArrayList" to arrayListOf<String>(), "favColorList" to arrayListOf<String>()))
+
+
+
 
                                                     val intent = Intent(this, MainActivity::class.java)
                                                     val text = "Bienvenido!"
