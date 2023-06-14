@@ -20,6 +20,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
+@Suppress("NAME_SHADOWING")
 class ActivitySignUp : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignUpBinding
@@ -72,7 +73,7 @@ class ActivitySignUp : AppCompatActivity() {
                         FirebaseAuth.getInstance().createUserWithEmailAndPassword(editTextEmail.text.toString(), editTextPassword.text.toString()).addOnCompleteListener {
                         if(it.isSuccessful){
                             val user = hashMapOf("userName" to editTextUserName.text.toString(), "email" to editTextEmail.text.toString(), "pfp" to "")
-                            val colorArrayList = ArrayList<String>()
+                            ArrayList<String>()
                             db.collection("users").document(editTextEmail.text.toString())
                                 .set(user)
                                 .addOnCompleteListener { dbTask ->

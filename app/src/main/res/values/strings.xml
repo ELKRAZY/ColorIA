@@ -71,6 +71,9 @@
     <string name="fp_colorname">fp_colorName</string>
     <string name="colorhex">colorHex</string>
     <string name="enviar_lista">Enviar lista</string>
+    <string name="recordar">Recordar</string>
+    <string name="iniciar">INICIAR</string>
+    <string name="recuperar_contrase_a">Recuperar contraseña</string>
 
 
 </resources>

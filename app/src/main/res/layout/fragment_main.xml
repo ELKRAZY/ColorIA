@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/backgroundColor"
-    tools:context=".MainFragment">
+    tools:context=".fragments.MainFragment">
 
     <!-- Rest of your layout code -->
 
@@ -159,7 +159,8 @@
             android:drawableEnd="@drawable/key_pass"
             android:fontFamily="@font/roboto_medium"
             android:gravity="center|start"
-            android:text="@string/contrase_a" />
+            android:text="@string/contrase_a"
+            tools:ignore="VisualLintButtonSize" />
     </LinearLayout>
 
     <LinearLayout
@@ -186,7 +187,8 @@
             android:drawableEnd="@drawable/ic_outline_info_24"
             android:fontFamily="@font/roboto_medium"
             android:gravity="center|start"
-            android:text="@string/versi_n_de_la_app" />
+            android:text="@string/versi_n_de_la_app"
+            tools:ignore="VisualLintButtonSize" />
 
         <View
             android:id="@+id/divider2"
@@ -203,7 +205,8 @@
             android:drawableEnd="@drawable/ic_baseline_help_outline_24"
             android:fontFamily="@font/roboto_medium"
             android:gravity="center|start"
-            android:text="@string/preguntas_frecuentes" />
+            android:text="@string/preguntas_frecuentes"
+            tools:ignore="VisualLintButtonSize" />
 
         <View
             android:id="@+id/divider"
@@ -218,7 +221,8 @@
             android:drawableEnd="@drawable/ic_baseline_exit_to_app_24"
             android:fontFamily="@font/roboto_medium"
             android:gravity="start|center_vertical"
-            android:text="@string/cerrar_sesi_n" />
+            android:text="@string/cerrar_sesi_n"
+            tools:ignore="VisualLintButtonSize" />
     </LinearLayout>
 
 

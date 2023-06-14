@@ -1,4 +1,4 @@
-package com.example.coloria
+package com.example.coloria.fragments
 
 import android.graphics.Color
 import android.view.LayoutInflater

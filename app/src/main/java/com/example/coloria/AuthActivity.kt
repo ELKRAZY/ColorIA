@@ -18,6 +18,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
+@Suppress("NAME_SHADOWING")
 class AuthActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAuthBinding
@@ -188,7 +189,7 @@ class AuthActivity : AppCompatActivity() {
                                                 }
                                             }
                                     }
-                                }.addOnFailureListener { exception ->
+                                }.addOnFailureListener { _ ->
                                     // Manejar la excepción, si ocurre
                                 }
 

@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.coloria.databinding.ActivityMainBinding
+import com.example.coloria.fragments.FavsFragment
+import com.example.coloria.fragments.FragmentHistory
+import com.example.coloria.fragments.MainFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 private lateinit var bottomNavigationView: BottomNavigationView

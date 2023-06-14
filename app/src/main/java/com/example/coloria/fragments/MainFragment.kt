@@ -1,4 +1,4 @@
-package com.example.coloria
+package com.example.coloria.fragments
 
 import android.content.Context
 import android.net.Uri
@@ -10,6 +10,8 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.example.coloria.BuildConfig
+import com.example.coloria.R
 import com.example.coloria.databinding.FragmentMainBinding
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -42,13 +44,13 @@ class MainFragment : Fragment() {
         setUserData()
         editPfp()
         resetPass()
-        AppVersion()
+        appVersion()
         binding.buttonLogOut.setOnClickListener {
             logoutButton()
         }
     }
 
-    private fun AppVersion(){
+    private fun appVersion(){
         binding.buttonVersion.setOnClickListener{
             showToast(BuildConfig.VERSION_NAME)
         }

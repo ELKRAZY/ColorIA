@@ -26,7 +26,8 @@
             android:layout_height="78dp"
             android:layout_marginStart="45dp"
             android:layout_marginTop="11.25dp"
-            app:srcCompat="@drawable/logo" />
+            app:srcCompat="@drawable/logo"
+            android:importantForAccessibility="no" />
 
         <ImageView
             android:id="@+id/imageView2"
@@ -34,7 +35,9 @@
             android:layout_height="32dp"
             android:layout_marginStart="4.50dp"
             android:layout_marginBottom="33.75dp"
-            app:srcCompat="@drawable/logo2" />
+            app:srcCompat="@drawable/logo2"
+            tools:ignore="ImageContrastCheck"
+            android:importantForAccessibility="no" />
 
         <EditText
             android:id="@+id/editTextEmail"
@@ -46,10 +49,11 @@
 
             android:drawableEnd="@drawable/ic_baseline_email_24"
             android:ems="10"
-            android:hint="Email"
+            android:hint="@string/email"
             android:inputType="textEmailAddress"
             android:minHeight="48dp"
-            android:autofillHints="" />
+            android:autofillHints=""
+            tools:ignore="VisualLintTextFieldSize" />
 
         <EditText
             android:id="@+id/editTextPassword"
@@ -60,9 +64,11 @@
             android:layout_marginBottom="90dp"
             android:drawableEnd="@drawable/ic_baseline_password_24"
             android:ems="10"
-            android:hint="Contraseña"
+            android:hint="@string/contrase_a"
             android:inputType="textPassword"
-            android:minHeight="48dp" />
+            android:minHeight="48dp"
+            android:autofillHints=""
+            tools:ignore="VisualLintTextFieldSize" />
 
     </LinearLayout>
 
@@ -81,7 +87,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="22.50dp"
-            android:text="Recordar" />
+            android:text="@string/recordar"
+            tools:ignore="VisualLintButtonSize" />
 
         <Button
             android:id="@+id/button_LogGoogle"
@@ -91,14 +98,15 @@
             android:layout_marginRight="20.25dp"
             android:layout_marginBottom="30dp"
             android:gravity="center"
-            android:text="Login con Google"
+            android:text="@string/login_con_google"
             android:textAllCaps="false"
             app:cornerRadius="10dp"
             app:icon="@drawable/logogoogle"
             app:iconGravity="start"
             app:iconPadding="-20dp"
             app:iconSize="25dip"
-            app:iconTint="@null" />
+            app:iconTint="@null"
+            tools:ignore="VisualLintButtonSize" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_SingIn"
@@ -109,7 +117,8 @@
             android:layout_marginBottom="30dp"
             android:background="@drawable/buttongradientcolor"
             android:radius="20dp"
-            android:text="INICIAR" />
+            android:text="@string/iniciar"
+            tools:ignore="VisualLintButtonSize" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -126,9 +135,10 @@
                 android:layout_weight="50"
                 android:background="@android:color/transparent"
                 android:minHeight="48dp"
-                android:text="Registrarse"
+                android:text="@string/registrar"
                 android:textSize="10sp"
-                app:cornerRadius="50dp" />
+                app:cornerRadius="50dp"
+                tools:ignore="ButtonStyle,SmallSp,VisualLintButtonSize" />
 
             <Button
                 android:id="@+id/buttonPassRecovery"
@@ -139,10 +149,11 @@
                 android:layout_weight="50"
                 android:background="@android:color/transparent"
                 android:minHeight="48dp"
-                android:text="Recuperar contraseña"
+                android:text="@string/recuperar_contrase_a"
                 android:textSize="10sp"
                 android:visibility="visible"
-                app:cornerRadius="50dp" />
+                app:cornerRadius="50dp"
+                tools:ignore="ButtonStyle,SmallSp,VisualLintButtonSize" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

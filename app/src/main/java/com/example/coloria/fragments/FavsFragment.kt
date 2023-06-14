@@ -1,4 +1,4 @@
-package com.example.coloria
+package com.example.coloria.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,17 +9,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.coloria.databinding.FragmentHistoryListBinding
+import com.example.coloria.CameraActivity
+import com.example.coloria.databinding.FragmentFavsListBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 
-class FragmentHistory : Fragment() {
+class FavsFragment : Fragment() {
 
     private var columnCount = 1
-    private lateinit var binding: FragmentHistoryListBinding
-    private lateinit var adapter: MyItemRecyclerViewAdapter
+    private lateinit var binding: FragmentFavsListBinding
+    private lateinit var adapter: MyItemRecyclerViewAdapter2
     private val db = Firebase.firestore
     private val users = FirebaseAuth.getInstance().currentUser
     private val email = users?.email
@@ -36,11 +37,11 @@ class FragmentHistory : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentHistoryListBinding.inflate(inflater, container, false)
+        binding = FragmentFavsListBinding.inflate(inflater, container, false)
         val view = binding.root
 
         // Set up RecyclerView
-        val recyclerView = binding.colorHistoryView
+        val recyclerView = binding.FavColorView
         recyclerView.layoutManager = when {
             columnCount <= 1 -> LinearLayoutManager(context)
             else -> GridLayoutManager(context, columnCount)
@@ -51,10 +52,10 @@ class FragmentHistory : Fragment() {
 
 
         usersCollectionRef.get().addOnSuccessListener { documentSnapshot ->
-            val colorArrayList = documentSnapshot.get("colorArrayList") as? ArrayList<String>
-            if (colorArrayList != null) {
-                colorList = colorArrayList
-                adapter = MyItemRecyclerViewAdapter(colorList)
+            val favColorList = documentSnapshot.get("favColorList") as? ArrayList<String>
+            if (favColorList != null) {
+                colorList = favColorList
+                adapter = MyItemRecyclerViewAdapter2(colorList)
                 recyclerView.adapter = adapter
 
                 binding.sendButton.setOnClickListener {
@@ -64,7 +65,6 @@ class FragmentHistory : Fragment() {
                         type = "text/plain"
                     }
                     val shareIntent = Intent.createChooser(sendIntent, null)
-
                     startActivity(shareIntent)
 
                 }
@@ -74,6 +74,8 @@ class FragmentHistory : Fragment() {
             // Ocurrió un error al obtener el documento de Firebase
             Log.e(CameraActivity.TAG, "Failed to get document from Firebase", e)
         }
+
+
 
         return view
     }
