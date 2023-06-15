@@ -1,6 +1,7 @@
 package com.example.coloria
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -36,6 +37,9 @@ class AuthActivity : AppCompatActivity() {
         session()
         setup()
 
+        //Recuperar contraseña
+        passRecovery()
+
 // Configurar el OnClickListener para el botón
         binding.buttonSignUp.setOnClickListener {
             // Crear un Intent para la actividad ActivitySignIn
@@ -49,8 +53,7 @@ class AuthActivity : AppCompatActivity() {
     }
 
 
-
-    private fun setup(){
+    private fun setup() {
         val editTextEmail = binding.editTextEmail
         val editTextPassword = binding.editTextPassword
         val buttonRemember = binding.checkBoxRemember
@@ -72,11 +75,17 @@ class AuthActivity : AppCompatActivity() {
         binding.buttonSingIn.setOnClickListener {
 
             if (validateEmail(editTextEmail) && validatePassword(editTextPassword)) {
-                FirebaseAuth.getInstance().signInWithEmailAndPassword(editTextEmail.text.toString(), editTextPassword.text.toString()).addOnCompleteListener {
-                    if(it.isSuccessful){
+                FirebaseAuth.getInstance().signInWithEmailAndPassword(
+                    editTextEmail.text.toString(),
+                    editTextPassword.text.toString()
+                ).addOnCompleteListener {
+                    if (it.isSuccessful) {
 
-                        if(buttonRemember.isChecked){
-                            val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit()
+                        if (buttonRemember.isChecked) {
+                            val prefs = getSharedPreferences(
+                                getString(R.string.prefs_file),
+                                Context.MODE_PRIVATE
+                            ).edit()
                             prefs.putString("email", editTextEmail.text.toString())
                             prefs.putString("password", editTextPassword.text.toString())
                             prefs.apply()
@@ -89,27 +98,28 @@ class AuthActivity : AppCompatActivity() {
                         // Iniciar la actividad ActivitySignIn
                         startActivity(intent)
 
-             }else{
+                    } else {
                         val text = " La contraseña y/o el email no son correctos"
                         showToast(text)
 
                     }
 
-                      }
-                    } else{
+                }
+            } else {
                 val text = "No se ha podido iniciar sesión X_x"
                 showToast(text)
 
             }
-                }
         }
-    private fun showToast(text: String){
+    }
+
+    private fun showToast(text: String) {
         val duration = Toast.LENGTH_SHORT
         val toast = Toast.makeText(applicationContext, text, duration)
         toast.show()
     }
 
-    private fun session(){
+    private fun session() {
         val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
         val gprefs = getSharedPreferences(getString(R.string.gprefs_file), Context.MODE_PRIVATE)
 
@@ -127,94 +137,121 @@ class AuthActivity : AppCompatActivity() {
         }
 
     }
-    private  val signInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            // El inicio de sesión fue exitoso, puedes obtener el token de acceso aquí
-            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-            try {
-                val token = task.getResult(ApiException::class.java)
-                // hacer algo con el token aquí
-                if (token != null) {
-                    val credential = GoogleAuthProvider.getCredential(token.idToken, null)
-                    FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            val users = FirebaseAuth.getInstance().currentUser
-                            if (users != null) {
-                                val email = users.email
-                                val username = email?.substringBefore("@")
-                                val coll = db.collection("users").document(email.toString())
-                                coll.get().addOnSuccessListener { document ->
-                                    if (document != null && document.exists()) {
-                                        val email = document.getString("email")
-                                        if (email != null) {
-                                            // El campo "email" se ha obtenido correctamente
-                                            val prefs = getSharedPreferences(getString(R.string.gprefs_file), Context.MODE_PRIVATE).edit()
-                                            prefs.putString("google_id_token", token.idToken)
-                                            prefs.apply()
 
-                                            val intent = Intent(this, MainActivity::class.java)
-                                            val text = "Bienvenido!"
-                                            showToast(text)
-
-                                            // Iniciar la actividad ActivitySignIn
-                                            startActivity(intent)
-                                        }
-                                    } else {
-                                        // El documento no existe
-                                        val user = hashMapOf("userName" to username, "email" to email, "pfp" to "")
-                                        db.collection("users").document(email.toString())
-                                            .set(user)
-                                            .addOnCompleteListener { dbTask ->
-                                                if (dbTask.isSuccessful) {
-                                                    val prefs = getSharedPreferences(getString(R.string.gprefs_file), Context.MODE_PRIVATE).edit()
-                                                    prefs.putString("google_id_token", token.idToken)
+    private val signInLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                // El inicio de sesión fue exitoso, puedes obtener el token de acceso aquí
+                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                try {
+                    val token = task.getResult(ApiException::class.java)
+                    // hacer algo con el token aquí
+                    if (token != null) {
+                        val credential = GoogleAuthProvider.getCredential(token.idToken, null)
+                        FirebaseAuth.getInstance().signInWithCredential(credential)
+                            .addOnCompleteListener {
+                                if (it.isSuccessful) {
+                                    val users = FirebaseAuth.getInstance().currentUser
+                                    if (users != null) {
+                                        val email = users.email
+                                        val username = email?.substringBefore("@")
+                                        val coll = db.collection("users").document(email.toString())
+                                        coll.get().addOnSuccessListener { document ->
+                                            if (document != null && document.exists()) {
+                                                val email = document.getString("email")
+                                                if (email != null) {
+                                                    // El campo "email" se ha obtenido correctamente
+                                                    val prefs = getSharedPreferences(
+                                                        getString(R.string.gprefs_file),
+                                                        Context.MODE_PRIVATE
+                                                    ).edit()
+                                                    prefs.putString(
+                                                        "google_id_token",
+                                                        token.idToken
+                                                    )
                                                     prefs.apply()
 
-
-                                                db.collection("colorlist").document(email.toString())
-                                                    .set(hashMapOf("colorArrayList" to arrayListOf<String>(), "favColorList" to arrayListOf<String>()))
-
-
-
-
-                                                    val intent = Intent(this, MainActivity::class.java)
+                                                    val intent =
+                                                        Intent(this, MainActivity::class.java)
                                                     val text = "Bienvenido!"
                                                     showToast(text)
 
                                                     // Iniciar la actividad ActivitySignIn
                                                     startActivity(intent)
-                                                } else {
-                                                    val text = "Error al guardar el usuario en la base de datos!"
-                                                    showToast(text)
                                                 }
+                                            } else {
+                                                // El documento no existe
+                                                val user = hashMapOf(
+                                                    "userName" to username,
+                                                    "email" to email,
+                                                    "pfp" to ""
+                                                )
+                                                db.collection("users").document(email.toString())
+                                                    .set(user)
+                                                    .addOnCompleteListener { dbTask ->
+                                                        if (dbTask.isSuccessful) {
+                                                            val prefs = getSharedPreferences(
+                                                                getString(R.string.gprefs_file),
+                                                                Context.MODE_PRIVATE
+                                                            ).edit()
+                                                            prefs.putString(
+                                                                "google_id_token",
+                                                                token.idToken
+                                                            )
+                                                            prefs.apply()
+
+
+                                                            db.collection("colorlist")
+                                                                .document(email.toString())
+                                                                .set(
+                                                                    hashMapOf(
+                                                                        "colorArrayList" to arrayListOf<String>(),
+                                                                        "favColorList" to arrayListOf<String>()
+                                                                    )
+                                                                )
+
+
+                                                            val intent = Intent(
+                                                                this,
+                                                                MainActivity::class.java
+                                                            )
+                                                            val text = "Bienvenido!"
+                                                            showToast(text)
+
+                                                            // Iniciar la actividad ActivitySignIn
+                                                            startActivity(intent)
+                                                        } else {
+                                                            val text =
+                                                                "Error al guardar el usuario en la base de datos!"
+                                                            showToast(text)
+                                                        }
+                                                    }
                                             }
+                                        }.addOnFailureListener {
+                                            // Manejar la excepción, si ocurre
+                                        }
+
+
                                     }
-                                }.addOnFailureListener { _ ->
-                                    // Manejar la excepción, si ocurre
+                                    // Iniciar la actividad ActivitySignIn
+                                    startActivity(intent)
+                                } else {
+                                    val text = "Se ha producido un error al obtener el usuario!"
+                                    showToast(text)
                                 }
-
-
-
                             }
-                            // Iniciar la actividad ActivitySignIn
-                            startActivity(intent)
-                        } else {
-                            val text = "Se ha producido un error al obtener el usuario!"
-                            showToast(text)
-                        }
                     }
+
+                } catch (e: ApiException) {
+                    val text = "Se ha producido un error al obtener el usuario!"
+                    showToast(text)
+
                 }
-
-            }catch (e: ApiException){
-                val text = "Se ha producido un error al obtener el usuario!"
+            } else {
+                val text = "Algo ha fallado!"
                 showToast(text)
-
             }
-        } else{
-            val text = "Algo ha fallado!"
-            showToast(text)
         }
-    }
 
     private fun validateEmail(editTextEmail: EditText): Boolean {
         val email = editTextEmail.text.toString().trim()
@@ -240,7 +277,49 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 
+    private fun passRecovery() {
+
+        binding.buttonPassRecovery.setOnClickListener {
+            val editTextEmail = EditText(this)
+            editTextEmail.hint = "Correo electrónico"
+
+            val dialog: AlertDialog = AlertDialog.Builder(this)
+                .setTitle("Recuperar contraseña")
+                .setMessage("Ingrese su correo electrónico para recuperar su contraseña")
+                .setView(editTextEmail)
+                .setPositiveButton("Enviar") { dialog, _ ->
+                    val email = editTextEmail.text.toString().trim()
+                    if (email.isNotEmpty()) {
+                        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    val text =
+                                        "Se ha enviado un correo electrónico para restablecer la contraseña"
+                                    showToast(text)
+                                } else {
+                                    val text =
+                                        "No se pudo enviar el correo electrónico de recuperación de contraseña"
+                                    showToast(text)
+                                }
+                            }
+                    } else {
+                        val text = "Por favor, ingrese su correo electrónico"
+                        showToast(text)
+                    }
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Cancelar") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .create()
+
+            dialog.show()
+        }
+
     }
+
+}
+
 
 
 
