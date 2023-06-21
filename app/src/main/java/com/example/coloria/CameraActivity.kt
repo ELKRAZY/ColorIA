@@ -113,6 +113,26 @@ class CameraActivity : AppCompatActivity() {
 
         colorHex.setOnClickListener {
             copyText(colorHex.text.toString())
+            val usersCollectionRef = db.collection("colorlist").document(email.toString())
+
+            usersCollectionRef.get().addOnSuccessListener { documentSnapshot ->
+                val colorArrayList = documentSnapshot.get("colorArrayList") as? ArrayList<String>
+                colorArrayList?.add(colorHex.text.toString()) // Añade el color al ArrayList existente o crea uno nuevo si es nulo
+
+                usersCollectionRef.update("colorArrayList", colorArrayList)
+                    .addOnSuccessListener {
+                        // La actualización se realizó con éxito
+                        Log.d(TAG, "Color added to ArrayList in Firebase")
+                    }
+                    .addOnFailureListener { e ->
+                        // Ocurrió un error al realizar la actualización
+                        Log.e(TAG, "Failed to add color to ArrayList in Firebase", e)
+                    }
+            }.addOnFailureListener { e ->
+                // Ocurrió un error al obtener el documento de Firebase
+                Log.e(TAG, "Failed to get document from Firebase", e)
+            }
+
         }
 
         colorName.setOnClickListener {
@@ -348,25 +368,7 @@ class CameraActivity : AppCompatActivity() {
         clipboardManager.setPrimaryClip(clipData)
         Toast.makeText(applicationContext, "Copied $text", Toast.LENGTH_SHORT).show()
 
-        val usersCollectionRef = db.collection("colorlist").document(email.toString())
 
-        usersCollectionRef.get().addOnSuccessListener { documentSnapshot ->
-            val colorArrayList = documentSnapshot.get("colorArrayList") as? ArrayList<String>
-            colorArrayList?.add(text) // Añade el color al ArrayList existente o crea uno nuevo si es nulo
-
-            usersCollectionRef.update("colorArrayList", colorArrayList)
-                .addOnSuccessListener {
-                    // La actualización se realizó con éxito
-                    Log.d(TAG, "Color added to ArrayList in Firebase")
-                }
-                .addOnFailureListener { e ->
-                    // Ocurrió un error al realizar la actualización
-                    Log.e(TAG, "Failed to add color to ArrayList in Firebase", e)
-                }
-        }.addOnFailureListener { e ->
-            // Ocurrió un error al obtener el documento de Firebase
-            Log.e(TAG, "Failed to get document from Firebase", e)
-        }
     }
 
     private fun setInit() {

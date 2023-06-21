@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
@@ -213,7 +214,7 @@ class FullPhotoActivity : AppCompatActivity() {
 
     private fun delete(fileName: String) {
 
-        val file = File(externalMediaDirs[0], fileName)
+        val file = File(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName)
 
         if (file.exists()) {
             file.delete()
