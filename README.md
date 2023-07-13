@@ -8,7 +8,7 @@
 ## Why?
 
 App meanted to let you pick any color data from a photo and getting it's own set of complementary color pallete
-Is intended to be helpfull for artist and colorblind persons
+is intended to be helpful for artist and color blind persons
 
 ## 📝 To Do
 
