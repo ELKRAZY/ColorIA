@@ -46,11 +46,17 @@ import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlin.properties.Delegates
+import com.example.coloria.service.AIColorService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class CameraActivity : AppCompatActivity() {
 
     private val detectHandler = ColorDetectHandler()
+    private val apiKey = Secrets.API_KEY
+    private lateinit var aiColorService: AIColorService
 
     private lateinit var binding: ActivityCameraBinding
 
@@ -68,6 +74,7 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var galleryBtn: Button
     private lateinit var takePhotoBtn: Button
     private lateinit var switchCameraBtn: Button
+    private lateinit var aiBtn: Button
     private lateinit var colorName: TextView
     private lateinit var fabSavedfPhotos: FloatingActionButton
     private lateinit var pointer: View
@@ -112,31 +119,63 @@ class CameraActivity : AppCompatActivity() {
 
 
         colorHex.setOnClickListener {
-            copyText(colorHex.text.toString())
-            val usersCollectionRef = db.collection("colorlist").document(email.toString())
+            val hexValue = colorHex.text.toString()
+            copyText(hexValue)
+            
+            // Validate that hex value is not empty or just "#"
+            if (hexValue.isNotEmpty() && hexValue != "#" && hexValue.replace("#", "").isNotEmpty()) {
+                val usersCollectionRef = db.collection("colorlist").document(email.toString())
 
-            usersCollectionRef.get().addOnSuccessListener { documentSnapshot ->
-                val colorArrayList = documentSnapshot.get("colorArrayList") as? ArrayList<String>
-                colorArrayList?.add(colorHex.text.toString()) // Añade el color al ArrayList existente o crea uno nuevo si es nulo
+                usersCollectionRef.get().addOnSuccessListener { documentSnapshot ->
+                    val colorArrayList = documentSnapshot.get("colorArrayList") as? ArrayList<String>
+                    colorArrayList?.add(hexValue)
 
-                usersCollectionRef.update("colorArrayList", colorArrayList)
-                    .addOnSuccessListener {
-                        // La actualización se realizó con éxito
-                        Log.d(TAG, "Color added to ArrayList in Firebase")
-                    }
-                    .addOnFailureListener { e ->
-                        // Ocurrió un error al realizar la actualización
-                        Log.e(TAG, "Failed to add color to ArrayList in Firebase", e)
-                    }
-            }.addOnFailureListener { e ->
-                // Ocurrió un error al obtener el documento de Firebase
-                Log.e(TAG, "Failed to get document from Firebase", e)
+                    usersCollectionRef.update("colorArrayList", colorArrayList)
+                        .addOnSuccessListener {
+                            Log.d(TAG, "Color added to ArrayList in Firebase")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e(TAG, "Failed to add color to ArrayList in Firebase", e)
+                        }
+                }.addOnFailureListener { e ->
+                    Log.e(TAG, "Failed to get document from Firebase", e)
+                }
+            } else {
+                Log.d(TAG, "Skipped adding empty or invalid color to Firebase")
             }
 
         }
 
         colorName.setOnClickListener {
             copyText(colorName.text.toString())
+        }
+
+        aiBtn.setOnClickListener {
+            val hex = colorHex.text.toString().replace("#", "")
+            Log.d(TAG, "AI Button clicked. Hex: $hex")
+            
+            if (hex.isNotEmpty()) {
+                colorName.text = "Thinking..."
+                
+                CoroutineScope(Dispatchers.Main).launch {
+                    try {
+                        Log.d(TAG, "Calling AIColorService...")
+                        
+                        val name = aiColorService.getColorName(hex)
+                        
+                        Log.d(TAG, "AI Response received: $name")
+                        
+                        colorName.text = name
+                        cardColorName.text = name
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error in coroutine", e)
+                        Toast.makeText(this@CameraActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                        colorName.text = "Error"
+                    }
+                }
+            } else {
+                Log.d(TAG, "Hex is empty")
+            }
         }
 
 
@@ -258,7 +297,7 @@ class CameraActivity : AppCompatActivity() {
 
                         Log.i(TAG, "The image has been saved in ${file.absolutePath}")
 
-                        //Toast.makeText(this@CameraActivity,"The image has been saved in ${file.toUri()}",Toast.LENGTH_LONG).show()
+                        //Toast.makeText(this@CameraActivity,"The image has been saved in ${file.toUri()}\",Toast.LENGTH_LONG).show()
                     }
 
                     override fun onError(exception: ImageCaptureException) {
@@ -363,13 +402,12 @@ class CameraActivity : AppCompatActivity() {
     }
 
     private fun copyText(text: String) {
-        val clipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-        val clipData = ClipData.newPlainText("copy_text", text)
-        clipboardManager.setPrimaryClip(clipData)
-        Toast.makeText(applicationContext, "Copied $text", Toast.LENGTH_SHORT).show()
-
-
+        val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("label", text)
+        clipboard.setPrimaryClip(clip)
+        Toast.makeText(applicationContext, "Copied", Toast.LENGTH_SHORT).show()
     }
+
 
     private fun setInit() {
 
@@ -392,9 +430,12 @@ class CameraActivity : AppCompatActivity() {
         cardColor = binding.cardColor
         cardColorName = binding.cardColorName
         cardColorPreview = binding.cardColorPreview
+        
+        aiBtn = binding.aiBtn
 
         //ViewModel
         detectViewModel = ColorDetectViewModel()
+        aiColorService = AIColorService(apiKey)
 
 
         imgIndex = intent.getIntExtra("imgIndex", -1)
@@ -411,9 +452,9 @@ class CameraActivity : AppCompatActivity() {
 //        return files
 //    }
 
+
     companion object {
-        const val TAG = "CameraActivity"
-//        private const val IMAGE_CHOOSE = 1000
+        internal const val TAG = "CameraActivity"
         private const val PERMISSION_CODE = 1001
     }
 }
