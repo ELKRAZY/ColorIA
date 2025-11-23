@@ -297,7 +297,7 @@ class CameraActivity : AppCompatActivity() {
 
                         Log.i(TAG, "The image has been saved in ${file.absolutePath}")
 
-                        //Toast.makeText(this@CameraActivity,"The image has been saved in ${file.toUri()}\",Toast.LENGTH_LONG).show()
+                        //Toast.makeText(this@CameraActivity,"The image has been saved in ${file.toUri()}",Toast.LENGTH_LONG).show()
                     }
 
                     override fun onError(exception: ImageCaptureException) {
@@ -437,6 +437,9 @@ class CameraActivity : AppCompatActivity() {
         detectViewModel = ColorDetectViewModel()
         aiColorService = AIColorService(apiKey)
 
+        // Initialize with empty text to prevent saving placeholder values
+        colorName.text = ""
+        colorHex.text = ""
 
         imgIndex = intent.getIntExtra("imgIndex", -1)
         if (imgIndex != -1) {

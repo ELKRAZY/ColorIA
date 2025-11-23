@@ -27,10 +27,16 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.io.File
+import com.example.coloria.service.AIColorService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class FullPhotoActivity : AppCompatActivity() {
 
     private val detectHandler = ColorDetectHandler()
+    private val apiKey = Secrets.API_KEY
+    private lateinit var aiColorService: AIColorService
 
     private lateinit var binding: ActivityFullPhotoBinding
             private var index: Int = 0
@@ -52,6 +58,7 @@ class FullPhotoActivity : AppCompatActivity() {
     private lateinit var fpPointer: View
     private lateinit var fpColorName: TextView
     private lateinit var fpCardColorName: TextView
+    private lateinit var fpAiBtn: Button
 
     private val savedPhotosViewModel = SavedPhotosViewModel()
 
@@ -67,29 +74,60 @@ class FullPhotoActivity : AppCompatActivity() {
 
             val text = fpColorHex.text.toString()
             copyText(text)
-            val usersCollectionRef = db.collection("colorlist").document(email.toString())
+            
+            // Validate that hex value is not empty or just "#"
+            if (text.isNotEmpty() && text != "#" && text.replace("#", "").isNotEmpty()) {
+                val usersCollectionRef = db.collection("colorlist").document(email.toString())
 
-            usersCollectionRef.get().addOnSuccessListener { documentSnapshot ->
-                val colorArrayList = documentSnapshot.get("colorArrayList") as? ArrayList<String>
-                colorArrayList?.add(text) // Añade el color al ArrayList existente o crea uno nuevo si es nulo
+                usersCollectionRef.get().addOnSuccessListener { documentSnapshot ->
+                    val colorArrayList = documentSnapshot.get("colorArrayList") as? ArrayList<String>
+                    colorArrayList?.add(text)
 
-                usersCollectionRef.update("colorArrayList", colorArrayList)
-                    .addOnSuccessListener {
-                        // La actualización se realizó con éxito
-                        Log.d(TAG, "Color added to ArrayList in Firebase")
-                    }
-                    .addOnFailureListener { e ->
-                        // Ocurrió un error al realizar la actualización
-                        Log.e(TAG, "Failed to add color to ArrayList in Firebase", e)
-                    }
-            }.addOnFailureListener { e ->
-                // Ocurrió un error al obtener el documento de Firebase
-                Log.e(TAG, "Failed to get document from Firebase", e)
+                    usersCollectionRef.update("colorArrayList", colorArrayList)
+                        .addOnSuccessListener {
+                            Log.d(TAG, "Color added to ArrayList in Firebase")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e(TAG, "Failed to add color to ArrayList in Firebase", e)
+                        }
+                }.addOnFailureListener { e ->
+                    Log.e(TAG, "Failed to get document from Firebase", e)
+                }
+            } else {
+                Log.d(TAG, "Skipped adding empty or invalid color to Firebase")
             }
         }
 
         fpColorName.setOnClickListener {
             copyText(fpColorName.text.toString())
+        }
+
+        fpAiBtn.setOnClickListener {
+            val hex = fpColorHex.text.toString().replace("#", "")
+            Log.d(TAG, "AI Button clicked in FullPhotoActivity. Hex: $hex")
+            
+            if (hex.isNotEmpty()) {
+                fpColorName.text = "Thinking..."
+                
+                CoroutineScope(Dispatchers.Main).launch {
+                    try {
+                        Log.d(TAG, "Calling AIColorService...")
+                        
+                        val name = aiColorService.getColorName(hex)
+                        
+                        Log.d(TAG, "AI Response received: $name")
+                        
+                        fpColorName.text = name
+                        fpCardColorName.text = name
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error in coroutine", e)
+                        Toast.makeText(this@FullPhotoActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                        fpColorName.text = "Error"
+                    }
+                }
+            } else {
+                Log.d(TAG, "Hex is empty")
+            }
         }
 
         deleteBtn.setOnClickListener {
@@ -137,6 +175,10 @@ class FullPhotoActivity : AppCompatActivity() {
         fpColorHex = binding.fpColorHex
         fpColorName = binding.fpColorName
         fpCardColorName = binding.fpCardColorName
+        fpAiBtn = binding.fpAiBtn
+
+        // Initialize AI Service
+        aiColorService = AIColorService(apiKey)
 
         // Value
         index = intent.getIntExtra("photoIndex", 0)

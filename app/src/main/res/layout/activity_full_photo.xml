@@ -80,7 +80,6 @@
             android:fontFamily="casual"
             android:foreground="?attr/selectableItemBackground"
             android:paddingHorizontal="10dp"
-            android:text="@string/fp_colorname"
             android:textColor="?attr/colorOnPrimary"
             android:textStyle="bold"
             tools:ignore="TouchTargetSizeCheck" />
@@ -95,7 +94,6 @@
             android:fontFamily="casual"
             android:foreground="?attr/selectableItemBackground"
             android:paddingHorizontal="10dp"
-            android:text="@string/colorhex"
             android:textAlignment="textEnd"
             android:textColor="?attr/colorOnPrimary"
             android:textStyle="bold"
@@ -112,5 +110,17 @@
         android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="5dp"
         android:background="@drawable/ic_delete"
+        android:importantForAccessibility="no" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/fp_aiBtn"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/deleteBtn"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="5dp"
+        android:background="@drawable/ic_icon_ai"
+        android:backgroundTint="@color/primaryBrand"
         android:importantForAccessibility="no" />
 </RelativeLayout>
